@@ -1,0 +1,6 @@
+# Source PDFs are linked from the README, not redistributed
+*.pdf
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+*.egg-info/

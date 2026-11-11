@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qlpca"
+version = "0.1.0"
+description = "Quasi-linear PCA: PCA with low-order spline transformations, fitted by alternating least squares"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Nuno Lavado" }]
+dependencies = ["numpy>=1.22", "scipy>=1.8"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

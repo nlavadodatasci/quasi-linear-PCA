@@ -1,0 +1,13 @@
+variable,indicator,eurostat_code
+V1,Balance of international trade in goods,tec00044
+V2,Balance of international trade in services,tec00045
+V3,Harmonized Indices of Consumer Prices,teicp000
+V4,Harmonised unemployment rate,teilm020
+V5,Long term government bond yields,teimf050
+V6,GDP per capita in PPS,tsieb010
+V7,Real GDP growth rate,tsieb020
+V8,Expenditure on pensions,tps00103
+V9,Balance of payments,teibp070
+V10,Motorisation rate,tsdpc340
+V11,Human resources in science and technology,tsc00025
+V12,Public balance,tsieb080
