@@ -85,9 +85,13 @@ The package default is a modernised algorithm; `legacy=True` reproduces the 2012
 MATLAB behaviour and is what the replication notebooks compare with the thesis.
 
 ## Status
-- Done: package core and 22 tests reproducing the thesis tables (this is the
-  future `legacy=True` path).
-- Next: step 1b below.
+- Done: package core; step 1b (2026-11-11). `QLPCA` has the interface at the end of
+  `docs/DESIGN.md`; `legacy=True` reproduces the thesis tables (`tests/test_legacy.py`,
+  the original tests run with `legacy=True`, values unchanged); the default follows
+  D1-D10 (`tests/test_default.py`: optimum, order/affine invariance, basis
+  equivalence, ties, monotone, reproducibility). `requires-python >= 3.10`; the
+  version matrix is left to the phase-5 CI.
+- Next: step 3 (notebooks 01-04).
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

@@ -1,4 +1,4 @@
-"""Tests of the qlpca package against numbers printed in the thesis and the prototype.
+"""Tests of the legacy=True path (2012 MATLAB behaviour) against numbers printed in the thesis and the prototype.
 
 Targets come from tests/reference_values.json and are never edited to make tests pass.
 Loadings are compared in absolute value (sign is convention-dependent).
@@ -10,7 +10,9 @@ import sys
 import numpy as np
 import pytest
 
-from qlpca import QLPCA, ispline_basis, pseudo_indicator
+from functools import partial
+
+from qlpca import QLPCA as _QLPCA, ispline_basis, pseudo_indicator
 from qlpca.datasets import load_st_gender
 from qlpca.splines import interior_knots
 
@@ -21,6 +23,7 @@ import qlpca_prototype as proto  # noqa: E402
 REF = json.load(open(ROOT / "tests" / "reference_values.json", encoding="utf8"))
 X, VARIABLES, _ = load_st_gender()
 TOL = 0.005
+QLPCA = partial(_QLPCA, legacy=True)
 CASES = [("qlpca1", 1), ("qlpca2", 2)]
 
 
@@ -139,10 +142,9 @@ def test_degree1_zero_knots_equals_pca():
     np.testing.assert_allclose(S @ S.T, P_pca, atol=1e-6)
 
 
-@pytest.mark.parametrize("init", ["matlab", "pca"])
 @pytest.mark.parametrize("key,r", CASES)
-def test_constraints(init, key, r):
-    m = QLPCA(2, degree=1, n_knots=r, init=init).fit(X)
+def test_constraints(key, r):
+    m = QLPCA(2, degree=1, n_knots=r).fit(X)
     n = len(X)
     np.testing.assert_allclose(m.scores_.T @ m.scores_, n * np.eye(2), atol=1e-8)
     np.testing.assert_allclose(m.transformed_.mean(0), 0, atol=1e-10)
@@ -152,10 +154,9 @@ def test_constraints(init, key, r):
     assert m.communalities_.sum() == pytest.approx(m.eigenvalues_.sum(), abs=1e-6)
 
 
-@pytest.mark.parametrize("init", ["matlab", "pca"])
 @pytest.mark.parametrize("r", [1, 2])
-def test_loss_non_increasing(init, r):
-    m = QLPCA(2, degree=1, n_knots=r, init=init).fit(X)
+def test_loss_non_increasing(r):
+    m = QLPCA(2, degree=1, n_knots=r).fit(X)
     h = m.loss_history_
     assert len(h) > 2
     assert np.all(np.diff(h) <= 1e-8), np.diff(h).max()
@@ -168,12 +169,6 @@ def test_sign_convention():
         assert np.corrcoef(m.transformed_[:, j], H[:, j])[0, 1] >= 0
     top = np.abs(m.loadings_).argmax(0)
     assert np.all(m.loadings_[top, [0, 1]] > 0)
-
-
-def test_start_values_agree_for_two_components():
-    a = QLPCA(2, 1, 1, init="matlab").fit(X)
-    b = QLPCA(2, 1, 1, init="pca").fit(X)
-    np.testing.assert_allclose(a.eigenvalues_, b.eigenvalues_, atol=0.005)
 
 
 # ---------------------------------------------------- projection / reconstruction

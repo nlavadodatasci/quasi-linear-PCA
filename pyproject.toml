@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "qlpca"
 version = "0.1.0"
 description = "Quasi-linear PCA: PCA with low-order spline transformations, fitted by alternating least squares"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Nuno Lavado" }]
 dependencies = ["numpy>=1.22", "scipy>=1.8"]

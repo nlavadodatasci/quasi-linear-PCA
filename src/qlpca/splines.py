@@ -5,6 +5,8 @@ B_1..B_{w+1} of degree v on the knot sequence, I_i = sum_{q>i} B_q (i = 1..w,
 w = v + r); the first B-spline is dropped, so the constant is not in the span
 (it is recovered by centring in the estimator).
 """
+import warnings
+
 import numpy as np
 from scipy.interpolate import BSpline
 
@@ -25,10 +27,21 @@ def interior_knots(x, n_knots):
     return np.sort(matlab_prctile(np.asarray(x, float), q))
 
 
-def knot_sequence(x, degree, n_knots):
-    """min repeated degree+1 times, interior knots, max repeated degree+1 times."""
+def knot_sequence(x, degree, n_knots, interior=None):
+    """min repeated degree+1 times, interior knots, max repeated degree+1 times.
+
+    ``interior`` gives explicit interior knots instead of percentiles. Interior knots
+    that coincide (ties in the data) or fall on/outside the boundary are merged or
+    dropped, with a warning, which reduces the basis dimension (DESIGN D7).
+    """
     x = np.asarray(x, float)
-    return np.r_[[x.min()] * (degree + 1), interior_knots(x, n_knots), [x.max()] * (degree + 1)]
+    lo, hi = x.min(), x.max()
+    inner = interior_knots(x, n_knots) if interior is None else np.sort(np.asarray(interior, float))
+    keep = np.unique(inner[(inner > lo) & (inner < hi)])
+    if len(keep) < len(inner):
+        warnings.warn("coinciding or boundary interior knots were merged; the basis dimension is reduced",
+                      stacklevel=3)
+    return np.r_[[lo] * (degree + 1), keep, [hi] * (degree + 1)]
 
 
 def bspline_basis(x, degree, knots):
