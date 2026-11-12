@@ -310,6 +310,17 @@ class QLPCA:
         G = basis(t, self._degrees[j], self.knots_[j])
         return t, ((G - self._shift[j]) / self._scale[j]) @ self.coef_[j]
 
+    def variable_transformation(self, j, n_points=200):
+        """Curve of the optimal transformation of variable j on a grid over its training
+        range (any degree): returns (x in the original units, f_j(x))."""
+        if not hasattr(self, "scores_"):
+            raise AttributeError("estimator is not fitted")
+        k = self.knots_[j]
+        h = np.linspace(k[0], k[-1], n_points)
+        basis = ispline_basis if self._kinds[j] == "I" else bspline_basis
+        G = basis(h, self._degrees[j], k)
+        return h * self.std_[j] + self.mean_[j], ((G - self._shift[j]) / self._scale[j]) @ self.coef_[j]
+
     def transform_variables(self, X):
         """Optimal transformations f_j of new rows: linear interpolation of (h_j, f_j),
         linear extrapolation outside the training range."""
@@ -335,8 +346,15 @@ class QLPCA:
     def inverse_transform(self, scores):
         """Reconstruct the data from object scores: F_hat = X A', then invert each f_j.
 
-        Where f_j is not monotone the inverse is not unique: the first segment whose
-        range contains the value is used, and values outside the range of f_j are clipped.
+        The inverse of a piecewise-linear f_j is a function only where f_j is strictly
+        monotone. Where it is not unique the first segment whose range contains the value
+        is used, and values outside the range of f_j are clipped. In particular, with
+        ``monotone=True`` the constrained fit often has *flat* segments (a spline
+        coefficient is exactly zero, so f_j is constant above a knot): all observations
+        on a plateau share one value of f_j and are reconstructed at the knot where the
+        plateau starts. The reconstruction error of such observations is then as large
+        as the plateau is wide, even with p = m, although ``transform_variables(H_hat)``
+        still returns F exactly. Rows outside plateaus are reconstructed exactly.
         """
         self._check()
         Fh = np.asarray(scores, float) @ self.loadings_.T

@@ -203,3 +203,33 @@ def test_reconstruction_with_all_components():
 def test_convergence_warning():
     with pytest.warns(ConvergenceWarning):
         QLPCA(2, n_knots=2, n_init=0, max_iter=2).fit(X)
+
+
+def test_monotone_reconstruction_error_comes_from_flat_segments():
+    """With monotone=True and p = m, f_j has plateaus (zero coefficient) and the inverse is
+    not unique there: the error is confined to rows whose h_j lies on a plateau."""
+    for r in (1, 2):
+        m = QLPCA(M, n_knots=r, monotone=True, n_init=10, random_state=0).fit(X)
+        Hh = m.inverse_transform(m.scores_)
+        np.testing.assert_allclose(m.transform_variables(Hh), m.transformed_, atol=1e-7)
+        n_flat = 0
+        for j in range(M):
+            t, f = m._curve(j)
+            h = (X[:, j] - m.mean_[j]) / m.std_[j]
+            flat = np.abs(np.diff(f)) < 1e-9
+            n_flat += flat.sum()
+            on_plateau = np.zeros(len(h), bool)
+            for i in np.flatnonzero(flat):
+                on_plateau |= (h >= t[i] - 1e-12) & (h <= t[i + 1] + 1e-12)
+            np.testing.assert_allclose(Hh[~on_plateau, j], X[~on_plateau, j], atol=1e-6)
+            # plateau rows cannot all be reconstructed: the inverse is not unique there
+            if on_plateau.any():
+                assert np.abs(Hh[on_plateau, j] - X[on_plateau, j]).max() > 1e-3
+        assert n_flat > 0, "expected at least one plateau on these data"
+
+
+def test_variable_transformation_curve():
+    m = QLPCA(2, n_knots=1, random_state=0).fit(X)
+    x, f = m.variable_transformation(2, n_points=50)
+    assert x[0] == pytest.approx(X[:, 2].min()) and x[-1] == pytest.approx(X[:, 2].max())
+    np.testing.assert_allclose(np.interp(X[:, 2], x, f), m.transformed_[:, 2], atol=0.05)

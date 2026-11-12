@@ -85,13 +85,19 @@ The package default is a modernised algorithm; `legacy=True` reproduces the 2012
 MATLAB behaviour and is what the replication notebooks compare with the thesis.
 
 ## Status
-- Done: package core; step 1b (2026-11-11). `QLPCA` has the interface at the end of
-  `docs/DESIGN.md`; `legacy=True` reproduces the thesis tables (`tests/test_legacy.py`,
-  the original tests run with `legacy=True`, values unchanged); the default follows
-  D1-D10 (`tests/test_default.py`: optimum, order/affine invariance, basis
-  equivalence, ties, monotone, reproducibility). `requires-python >= 3.10`; the
-  version matrix is left to the phase-5 CI.
-- Next: step 3 (notebooks 01-04).
+- Done (2026-11-12): package complete (`splines`, `core`, `diagnostics`, `datasets`
+  incl. `make_cylinder`, `plots`); step 1b; tests (`tests/test_legacy.py`,
+  `test_default.py`, `test_package_extras.py`, 69 passing); notebooks 01-04 written and
+  executed end to end (outputs saved in `notebooks/`). Not pushed.
+- Findings to keep in mind: (a) `monotone=True` reconstruction with p = m has large
+  errors only on rows lying on flat segments of f_j (the inverse is not unique there;
+  documented in `inverse_transform`, tested); (b) `piecewise_loadings` must select
+  segments on the standardised scale (rounding on the original scale dropped extreme
+  rows); (c) thesis pp. 52-53 matrices are still not reproduced (open question 3,
+  stated in notebook 01); (d) CATPCA/SPSS figures are not reproduced (notebook 03).
+- Pending author decisions flagged in code/notebooks: noise scale of `make_cylinder`
+  (linearised scale chosen) and a, b ~ U(0,1) (inferred).
+- Next: step 4 (notebooks 05-07), then step 5 (release).
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
