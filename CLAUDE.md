@@ -107,7 +107,7 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
 - Step 5 in progress (2026-11-13): README (results-vs-thesis table), LICENSE (MIT),
   LICENSE-docs.md (CC BY 4.0 for text/notebooks; data excluded), CITATION.cff (validated
   with cffconvert), `.github/workflows/ci.yml` (pytest on 3.10-3.13; notebooks executed
-  with `tools/run_notebooks.py` on 3.12). Not pushed, so CI has not run yet.
+  with `tools/run_notebooks.py` on 3.12). Pushed 2026-11-13; CI green (pytest 3.10-3.13, notebooks).
 - Before a GitHub release / Zenodo DOI: (1) permission to redistribute the chapter 4 data
   (open question 5) - the repository is already public; (2) whether notebook 07 ships as an
   introduction only; (3) Zenodo must be linked to the GitHub account before the release.
