@@ -44,8 +44,7 @@ language: English. Proposed licences: MIT (code), CC BY 4.0 (text/notebooks).
                       04_qlpca_algorithm.ipynb    thesis 3.1-3.2
                       05_cylinder_problem.ipynb   thesis 3.3
                       06_science_technology_gender.ipynb  thesis ch. 4
-                      07_wce2011_eurostat.ipynb   WCE 2011 paper
-                      08_msc_spline_simulation.ipynb  optional, MSc ch. 6
+                      07_wce2011_eurostat.ipynb   WCE 2011 paper (introduction only)
     tests/  data/  docs/  matlab_original/
     README.md  CITATION.cff  LICENSE  pyproject.toml  references.bib
 
@@ -104,7 +103,14 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
 - Blocked: the analysis of notebook 07 (WCE 2011 Eurostat): the data values and the reference
   year are not in the repository (open question 4).
 - Notebook 07 exists as an introduction only (no analysis); the author will decide later.
-- Next: optional 08, then step 5 (release).
+- Notebook 08 dropped by the author (2026-11-13).
+- Step 5 in progress (2026-11-13): README (results-vs-thesis table), LICENSE (MIT),
+  LICENSE-docs.md (CC BY 4.0 for text/notebooks; data excluded), CITATION.cff (validated
+  with cffconvert), `.github/workflows/ci.yml` (pytest on 3.10-3.13; notebooks executed
+  with `tools/run_notebooks.py` on 3.12). Not pushed, so CI has not run yet.
+- Before a GitHub release / Zenodo DOI: (1) permission to redistribute the chapter 4 data
+  (open question 5) - the repository is already public; (2) whether notebook 07 ships as an
+  introduction only; (3) Zenodo must be linked to the GitHub account before the release.
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

@@ -1,0 +1,74 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite the IJAM 2011 article below (preferred
+  citation) and, where appropriate, this repository.
+title: "qlPCA: reproducible notebooks for quasi-linear PCA"
+abstract: >-
+  Python re-implementation and chapter-by-chapter replication of the PhD thesis
+  on quasi-linear PCA (qlPCA): an extension of principal components analysis to
+  nonlinear relations through low-order spline transformations of continuous
+  variables, fitted by alternating least squares.
+type: software
+authors:
+  - family-names: Lavado
+    given-names: Nuno
+    affiliation: "Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/nlavadodatasci/quasi-linear-PCA"
+keywords:
+  - principal components analysis
+  - nonlinear PCA
+  - splines
+  - I-splines
+  - optimal scaling
+  - alternating least squares
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Lavado
+      given-names: Nuno
+    - family-names: Calapez
+      given-names: Teresa
+  title: "Principal Components Analysis with Spline Optimal Transformations for Continuous Data"
+  journal: "IAENG International Journal of Applied Mathematics"
+  volume: 41
+  issue: 4
+  start: 367
+  end: 375
+  year: 2011
+  issn: "1992-9978"
+  url: "https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf"
+references:
+  - type: thesis
+    authors:
+      - family-names: Lavado
+        given-names: Nuno
+    title: "Extensões via splines da Análise em Componentes Principais"
+    thesis-type: "PhD thesis"
+    institution:
+      name: "ISCTE - Instituto Universitário de Lisboa"
+      city: Lisboa
+      country: PT
+    year: 2012
+    url: "http://hdl.handle.net/10071/6202"
+  - type: conference-paper
+    authors:
+      - family-names: Lavado
+        given-names: Nuno
+      - family-names: Calapez
+        given-names: Teresa
+    title: "Quasi-Linear PCA: Low Order Spline's Approach to Non-Linear Principal Components"
+    collection-title: "Proceedings of the World Congress on Engineering 2011, WCE 2011"
+    volume: 1
+    start: 360
+    end: 364
+    year: 2011
+    isbn: "978-988-18210-6-5"
+    publisher:
+      name: "International Association of Engineers"
+    conference:
+      name: "World Congress on Engineering 2011"
+      city: London
+      country: GB
+    url: "http://hdl.handle.net/10071/14371"

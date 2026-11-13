@@ -6,14 +6,26 @@ build-backend = "setuptools.build_meta"
 name = "qlpca"
 version = "0.1.0"
 description = "Quasi-linear PCA: PCA with low-order spline transformations, fitted by alternating least squares"
+readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Nuno Lavado" }]
+keywords = ["PCA", "nonlinear PCA", "splines", "optimal scaling", "alternating least squares"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
 dependencies = ["numpy>=1.22", "scipy>=1.8"]
 
 [project.optional-dependencies]
 dev = ["pytest", "matplotlib"]
 notebooks = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
+
+[project.urls]
+Homepage = "https://github.com/nlavadodatasci/quasi-linear-PCA"
+"PhD thesis" = "http://hdl.handle.net/10071/6202"
 
 [tool.setuptools.packages.find]
 where = ["src"]
