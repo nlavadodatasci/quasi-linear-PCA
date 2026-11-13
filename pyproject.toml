@@ -12,7 +12,8 @@ authors = [{ name = "Nuno Lavado" }]
 dependencies = ["numpy>=1.22", "scipy>=1.8"]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "matplotlib"]
+notebooks = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

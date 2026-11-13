@@ -99,10 +99,12 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   opposite sign to the thesis's because of the arbitrary sign of mf_funds (SPEC 8);
   (g) the thesis describes the cylinder noise sd as "of each original variable": the
   linearised scale was chosen (the natural scale would give absurd noise for variable 12).
-- Pending author decisions: noise scale of `make_cylinder`; a, b ~ U(0,1) (inferred).
-- Blocked: notebook 07 (WCE 2011 Eurostat): the data values and the reference year are not
-  in the repository (open question 4); needs the author's decision before fetching data.
-- Next: notebook 07 once unblocked, optional 08, then step 5 (release).
+- Decided: `make_cylinder` measures the noise sd on the linearised scale; a, b ~ U(0,1)
+  (also stated in the MSc thesis ch. 6).
+- Blocked: the analysis of notebook 07 (WCE 2011 Eurostat): the data values and the reference
+  year are not in the repository (open question 4).
+- Notebook 07 exists as an introduction only (no analysis); the author will decide later.
+- Next: optional 08, then step 5 (release).
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

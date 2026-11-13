@@ -177,7 +177,11 @@ U(0,1). The noise sd is "a proportion of the standard deviation of each
 variable". IJAM Table II prints PCA without noise as 82.16 (thesis: 82.15). With U(0,1) and eight
 different seeds the prototype gave, without noise, PCA 78-87%, r=2 96.8-99.1%,
 r=3 98.2-99.5% (thesis: 82.15, 97.77, 98.43). "sd of the variable" for the
-noise is ambiguous (original or linearised scale): decide and document.
+noise is ambiguous (original or linearised scale). Decided: linearised scale (on the natural
+scale the noise for variable 12 would be hundreds of log-units). The MSc thesis (chapter 6) states
+that a and b are uniform on [0, 1] for its 31-cylinder version (8 derived variables, CATPCA
+spline ordinal (2,2) on the discretised matrix: 98.670 % in two dimensions; the data matrix is
+in its Annex 1, an image in the PDF).
 
 ## 8. Sign indeterminacy (found while porting)
 
@@ -195,7 +199,7 @@ first segment) and the notebook should discuss it.
 1. Convergence criterion actually used: author does not recall; use the loss-based
    test described in thesis 3.2.4 / IJAM IV.B.
 2. Cylinder example: seed lost (accepted: new simulation with fixed seed, a, b ~ U(0,1));
-   scale on which the noise sd is measured still to be decided.
+   noise sd measured on the linearised scale (decided).
 3. The illustrative pseudo-indicator matrices on pp. 52-53 are not reproduced by
    the printed code (different boundary knots?).
 4. Reference year of the Eurostat indicators in the WCE 2011 example.

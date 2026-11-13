@@ -44,11 +44,11 @@ def make_cylinder(n=51, noise=0.0, random_state=None):
 
     Returns ``(X, names)`` with X of shape (n, 12).
 
-    Assumptions that the thesis does not document (docs/SPEC.md sections 7 and 9):
-    a and b are drawn from U(0, 1), inferred from the ranges printed in the thesis figures;
-    and the scale on which the noise standard deviation is measured. **The linearised scale
-    is the choice made here, pending the author's decision**; measuring it on the original
-    scale would give a different noise level.
+    Choices that the thesis does not document (docs/SPEC.md sections 7 and 9):
+    a and b are drawn from U(0, 1) (stated in the MSc thesis, chapter 6, for its own version of
+    the problem; the ranges printed in the PhD figures are consistent with it); and the noise
+    standard deviation is measured **on the linearised scale**, the reading that makes sense
+    (on the natural scale it would be hundreds of log-units for variable 12).
     """
     rng = np.random.default_rng(random_state)
     a, b = rng.uniform(size=n), rng.uniform(size=n)
