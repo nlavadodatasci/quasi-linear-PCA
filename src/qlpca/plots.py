@@ -95,7 +95,7 @@ def transformation_plots(model, X, names=None, ncols=4, figsize=None, n_points=2
 def biplot(model, X=None, names=None, labels=None, components=(0, 1), ax=None, arrow_scale=None):
     """Biplot: object scores as points (optionally labelled) and loadings as arrows.
 
-    Arrows are rescaled by one common factor to the range of the scores. In qlPCA the
+    Arrows are rescaled by one common factor so that all tips lie within the range of the scores. In qlPCA the
     loadings refer to the *transformed* variables; a variable with a V-shaped
     transformation has an arbitrary sign (see ``QLPCA`` and docs/DESIGN.md D6).
     """
@@ -107,11 +107,16 @@ def biplot(model, X=None, names=None, labels=None, components=(0, 1), ax=None, a
     if labels is not None:
         for (x, y), lab in zip(S, labels):
             ax.annotate(lab, (x, y), xytext=(4, 3), textcoords="offset points", fontsize=8, color=INK2)
-    k = arrow_scale or 0.85 * np.abs(S).max() / max(np.abs(A).max(), 1e-12)
+    # one common factor, chosen so that every arrow tip stays inside the range of the scores on both axes
+    k = arrow_scale or 0.9 * min(np.abs(S[:, 0]).max() / max(np.abs(A[:, 0]).max(), 1e-12),
+                                 np.abs(S[:, 1]).max() / max(np.abs(A[:, 1]).max(), 1e-12))
     names = names or [f"x{j + 1}" for j in range(A.shape[0])]
     for (x, y), nm in zip(A * k, names):
         ax.annotate("", (x, y), (0, 0), arrowprops=dict(arrowstyle="->", color=ORANGE, lw=1.2), zorder=2)
         ax.annotate(nm, (x, y), xytext=(3, 3), textcoords="offset points", fontsize=8, color=INK, zorder=4)
+    tips = A * k
+    ax.update_datalim(np.vstack([tips, S]))   # annotations do not autoscale: include the arrow tips
+    ax.autoscale_view()
     ax.axhline(0, color=GRID, lw=0.8)
     ax.axvline(0, color=GRID, lw=0.8)
     ax.set_xlabel(f"Component {s + 1}")

@@ -85,19 +85,24 @@ The package default is a modernised algorithm; `legacy=True` reproduces the 2012
 MATLAB behaviour and is what the replication notebooks compare with the thesis.
 
 ## Status
-- Done (2026-11-12): package complete (`splines`, `core`, `diagnostics`, `datasets`
-  incl. `make_cylinder`, `plots`); step 1b; tests (`tests/test_legacy.py`,
-  `test_default.py`, `test_package_extras.py`, 69 passing); notebooks 01-04 written and
-  executed end to end (outputs saved in `notebooks/`). Not pushed.
-- Findings to keep in mind: (a) `monotone=True` reconstruction with p = m has large
-  errors only on rows lying on flat segments of f_j (the inverse is not unique there;
-  documented in `inverse_transform`, tested); (b) `piecewise_loadings` must select
-  segments on the standardised scale (rounding on the original scale dropped extreme
-  rows); (c) thesis pp. 52-53 matrices are still not reproduced (open question 3,
-  stated in notebook 01); (d) CATPCA/SPSS figures are not reproduced (notebook 03).
-- Pending author decisions flagged in code/notebooks: noise scale of `make_cylinder`
-  (linearised scale chosen) and a, b ~ U(0,1) (inferred).
-- Next: step 4 (notebooks 05-07), then step 5 (release).
+- Done (2026-11-13): package complete; step 1b; notebooks 01-06 written and executed end
+  to end (outputs saved in `notebooks/`); tests: `test_legacy.py`, `test_default.py`,
+  `test_package_extras.py`, `test_cylinder.py` (qualitative Table 3.3). Not pushed.
+- Notebook 05 (cylinder): qualitative only; means over 50 draws are within ~1 point of
+  thesis Table 3.3 in all nine cells. Notebook 06 (chapter 4): exact for Tables 4.1,
+  4.3-4.8 (<= 0.005, legacy=True); not unique: Fig. 4.5 (local optimum, start-dependent).
+- Findings to keep in mind: (a) `monotone=True` reconstruction errors come only from flat
+  segments of f_j; (b) `piecewise_loadings` selects segments on the standardised scale;
+  (c) thesis pp. 52-53 matrices not reproduced (open question 3); (d) CATPCA/SPSS figures
+  not reproduced; (e) PCA communality of mf_funds is 0.0252 exactly, 0.0244 only from the
+  rounded Table 4.4 loadings; (f) in the two-knot biplot the package's component 2 has the
+  opposite sign to the thesis's because of the arbitrary sign of mf_funds (SPEC 8);
+  (g) the thesis describes the cylinder noise sd as "of each original variable": the
+  linearised scale was chosen (the natural scale would give absurd noise for variable 12).
+- Pending author decisions: noise scale of `make_cylinder`; a, b ~ U(0,1) (inferred).
+- Blocked: notebook 07 (WCE 2011 Eurostat): the data values and the reference year are not
+  in the repository (open question 4); needs the author's decision before fetching data.
+- Next: notebook 07 once unblocked, optional 08, then step 5 (release).
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
