@@ -22,6 +22,10 @@ First public release: the Python package and the replication of the PhD thesis
   observations; `SmallSampleWarning` when n < 5 (degree + knots). Missing data are not
   supported.
 - pandas DataFrames accepted; column names kept in `feature_names_in_` and used by the plots.
+- `ExtrapolationWarning` (exported in `qlpca`): `transform` and `transform_variables` warn when
+  observations fall outside the training range, with their number and the variables; the values
+  returned (linear extrapolation) are unchanged (docs/DESIGN.md, D11). README section "Use with
+  scikit-learn": what works, the descriptive nature of the method, extrapolation and heavy tails.
 - Splines (`qlpca.splines`), diagnostics (`qlpca.diagnostics`), plots (`qlpca.plots`).
 - Data: the chapter 4 data set ships with the package (`qlpca.datasets.load_st_gender`,
   not covered by the code licence); `make_cylinder` simulates the cylinder problem.

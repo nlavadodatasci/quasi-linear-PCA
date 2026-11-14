@@ -140,6 +140,39 @@ Reconstruction inverts each piecewise-linear f_j; where f_j is not monotone the
 inverse is not unique and the first matching segment is used. Both points are
 documented in the docstrings.
 
+## D11. New observations outside the training range (added 2026-11-14, version 0.2.0)
+
+qlPCA is descriptive: it fits and interprets one sample. Projecting new rows (D10)
+needs f_j outside the training range of each variable, where the data say nothing.
+The 2012 code and `transform_variables` extend f_j linearly from its first or last
+segment. With heavy-tailed variables this can dominate the result: in
+`make_cylinder(n=200, random_state=0)` split with
+`train_test_split(test_size=0.25, random_state=1)`, the default fit gives training
+scores within ±2.5 and test scores up to 96.8. Four test rows fall outside the
+training range; the damage comes mainly from `2*a*pi/b^2` (one test value about 3,650
+training standard deviations above the training maximum, where the extrapolated f_j
+reaches 744 against at most 3.1 in training) and from `a/b` (f_j up to 18.5).
+
+| option | pros | cons |
+|---|---|---|
+| A. linear extrapolation, silent (until 0.2.0) | continuous; returns the training scores exactly; keeps the slope of the outer segments | unbounded; no sign that anything is wrong |
+| B. linear extrapolation with a warning | same values as A; the user is told how many rows and which variables are outside | still unbounded; a warning can be ignored |
+| C. clip to the training range (f_j constant outside, `extrapolate="clip"`) | bounded scores; no invented slope | distinct new values get equal transformations; changes the values returned |
+| D. return NaN or raise outside the range | never invents values | unusable in pipelines and cross-validation |
+| E. extrapolate on a log scale or another transformed scale | can tame some tails | a modelling choice the method does not make; depends on the variable |
+
+**Decision: B in 0.2.0.** The values returned do not change. `transform` and
+`transform_variables` issue `ExtrapolationWarning` (exported in `qlpca`) with the number
+of observations outside the training range and the names of the variables; nothing is
+issued for the training rows, nor by `fit` or `fit_transform`. The training range is
+the minimum and maximum of each variable in the training data, in its original units.
+The docstrings and the README ("Use with scikit-learn") say that the method is
+descriptive and recommend transforming heavy-tailed variables beforehand (e.g. log), or
+not projecting new data.
+
+**Deferred to 0.3.0:** option C as a parameter `extrapolate={"linear","clip"}`, with
+`"linear"` as the default so that results do not change.
+
 ---
 
 ## Public interface

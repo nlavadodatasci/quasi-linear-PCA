@@ -66,6 +66,41 @@ printed in the thesis, and how it differs from the MATLAB listings, in [`docs/SP
 The thesis pseudo-code omits one essential step — centring the spline basis (an intercept) — which the
 MATLAB code performs; notebook 04 gives the corrected pseudo-code.
 
+## Use with scikit-learn
+
+`QLPCA` is a scikit-learn transformer (`BaseEstimator`, `TransformerMixin`), tested with scikit-learn's
+estimator checks. What works:
+
+* `clone`, `get_params` / `set_params`, `Pipeline`, `GridSearchCV` (inside a pipeline with a supervised
+  step, or with your own scorer: `QLPCA` has no `score` method);
+* `set_output(transform="pandas")`, `get_feature_names_out()` (`qlpca0`, `qlpca1`, ...);
+* pandas DataFrames as input: the column names are kept in `feature_names_in_`, used in warnings and
+  plots, and checked again by `transform`.
+
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import Ridge
+
+pipe = make_pipeline(QLPCA(n_components=2, n_knots=2, random_state=0), Ridge())
+```
+
+Keep in mind what the method is for:
+
+* **qlPCA is descriptive.** It fits and interprets one sample: the transformations, loadings and scores
+  describe the data they were fitted on. It is not a predictive model and makes no claim about new data.
+* **New data only with degree 1.** `transform`, `transform_variables` and `inverse_transform` are defined
+  for piecewise-linear transformations (`degree=1`) only.
+* **Linear extrapolation.** For a new observation outside the training range of a variable, the
+  transformation is extended linearly from its first or last segment. Nothing in the data supports it
+  there, and a single extreme value can dominate the scores. `transform` and `transform_variables` then
+  issue an `ExtrapolationWarning` with the number of observations and the variables concerned. Validation
+  folds in cross-validation are new data, so expect the warning there.
+* **Heavy tails.** With heavy-tailed variables (for example `a/b`, `b/a` and `2*a*pi/b^2` in `make_cylinder`) the
+  scores of new observations can reach values around 100 when the training scores stay within ±2.5.
+  Transform such variables before fitting (e.g. `log`), or do not project new data.
+
+See [`docs/DESIGN.md`](docs/DESIGN.md), D10 and D11.
+
 ## Notebooks
 
 | notebook | source | content |

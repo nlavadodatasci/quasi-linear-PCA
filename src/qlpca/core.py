@@ -39,6 +39,11 @@ class SmallSampleWarning(UserWarning):
     parameters (thesis recommendation): the fit is likely to be over-parametrised."""
 
 
+class ExtrapolationWarning(UserWarning):
+    """New observations fall outside the training range of some variable: their
+    transformations are extrapolated linearly from the last segment of f_j (DESIGN D11)."""
+
+
 def _names(est, m):
     names = getattr(est, "feature_names_in_", None)
     return [str(v) for v in names] if names is not None else [f"x{j}" for j in range(m)]
@@ -201,6 +206,7 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
                 raise ValueError("legacy=True requires unique values within each variable "
                                  f"(ties in {', '.join(tied)}); use the default mode for data with ties")
         self.mean_, self.std_ = X.mean(0), std
+        self._data_min, self._data_max = X.min(0), X.max(0)   # training range (D11)
         H = (X - self.mean_) / self.std_
 
         explicit = [None] * m
@@ -367,11 +373,33 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return h * self.std_[j] + self.mean_[j], ((G - self._shift[j]) / self._scale[j]) @ self.coef_[j]
 
     def transform_variables(self, X):
-        """Optimal transformations f_j of new rows: linear interpolation of (h_j, f_j),
-        linear extrapolation outside the training range."""
+        """Optimal transformations f_j of (new) rows, degree 1 only.
+
+        Inside the training range of variable j, f_j is the fitted piecewise-linear
+        function (linear interpolation between the knots); the training rows get exactly
+        the columns of ``transformed_``. **Outside the training range f_j is extrapolated
+        linearly** from its first or last segment, and an :class:`ExtrapolationWarning`
+        gives the number of rows concerned and the variables (DESIGN D11). Nothing in the
+        data supports the transformation there: with heavy-tailed variables a single
+        extreme value can dominate the result. Transform such variables beforehand (e.g.
+        log) or do not project new data; qlPCA is a descriptive method.
+        """
+        return self._transform_variables(X, stacklevel=3)
+
+    def _transform_variables(self, X, stacklevel):
         self._check()
         X = validate_data(self, X, dtype=np.float64, reset=False, ensure_all_finite=False)
         _check_finite(self, X, "X")
+        outside = (X < self._data_min) | (X > self._data_max)
+        if outside.any():
+            names = _names(self, X.shape[1])
+            cols = [nm for nm, o in zip(names, outside.any(0)) if o]
+            warnings.warn(
+                f"{int(outside.any(1).sum())} of {X.shape[0]} observation(s) fall outside the training "
+                f"range of variable(s) {', '.join(cols)}; their transformations are extrapolated "
+                "linearly from the last segment of each spline and may be unreliable (heavy tails: "
+                "transform the variable, e.g. log, before fitting).",
+                ExtrapolationWarning, stacklevel=stacklevel)
         H = (X - self.mean_) / self.std_
         out = np.empty_like(H)
         for j in range(H.shape[1]):
@@ -385,9 +413,17 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return out
 
     def transform(self, X):
-        """Object scores of (new) rows, X = sqrt(n) F A (A'F'FA)^(-1/2) (D10; equivalent to
-        thesis eq. 3.5 and returns the training scores exactly for the training rows)."""
-        Z = self.transform_variables(X) @ self.loadings_
+        """Object scores of (new) rows, degree 1 only.
+
+        X_new = sqrt(n) F_new A (A'F'FA)^(-1/2) (DESIGN D10; equivalent to thesis eq. 3.5),
+        which returns ``scores_`` exactly for the training rows. F_new comes from
+        :meth:`transform_variables`: values outside the training range are extrapolated
+        linearly and an :class:`ExtrapolationWarning` is issued (DESIGN D11). qlPCA is a
+        descriptive method fitted to one sample; scores of new observations are reliable
+        only inside the training range. With heavy-tailed variables, transform them first
+        (e.g. log) or do not project new data.
+        """
+        Z = self._transform_variables(X, stacklevel=3) @ self.loadings_
         return np.sqrt(self.n_samples_) * Z @ self._T
 
     def inverse_transform(self, scores):
