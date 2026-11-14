@@ -23,3 +23,4 @@ comparison/princals/notes/
 # Comparison with princals: downloaded data and exported inputs (re-created at run time)
 comparison/princals/.cache/
 comparison/princals/results/inputs/
+!comparison/princals/results/figures/*.pdf
