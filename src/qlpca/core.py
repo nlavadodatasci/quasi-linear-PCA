@@ -24,6 +24,8 @@ import warnings
 
 import numpy as np
 from scipy.optimize import nnls
+from sklearn.base import BaseEstimator, ClassNamePrefixFeaturesOutMixin, TransformerMixin
+from sklearn.utils.validation import check_is_fitted, validate_data
 
 from .splines import bspline_basis, ispline_basis, knot_sequence
 
@@ -101,8 +103,10 @@ def _als(project, F0, X, A, p, tol, max_iter):
     return dict(F=F, X=X, A=A, ev=ev, history=np.array(history), converged=converged)
 
 
-class QLPCA:
-    """Quasi-linear PCA.
+class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
+    """Quasi-linear PCA, a scikit-learn transformer (``fit``, ``transform``,
+    ``fit_transform``, ``inverse_transform``, ``get_feature_names_out``; works with
+    ``clone``, ``Pipeline`` and ``set_output``).
 
     Parameters
     ----------
@@ -119,7 +123,8 @@ class QLPCA:
     init : ``"pca"``: start from the PCA scores (plus ``n_init`` random orthonormal
         starts; the fit with the lowest loss is kept). Ignored when ``legacy``.
     n_init : number of random starts in addition to the PCA start.
-    random_state : seed or ``numpy.random.Generator`` for the random starts.
+    random_state : None, int, ``numpy.random.Generator`` or ``numpy.random.RandomState``,
+        for the random starts.
     legacy : reproduce the 2012 MATLAB behaviour (start from the first p columns of the
         standardised pseudo-indicator matrix, single start, eigen-decomposition update,
         unique values required).
@@ -153,7 +158,8 @@ class QLPCA:
 
     # ------------------------------------------------------------------ fit
     def fit(self, X, y=None):
-        X = np.asarray(X, dtype=float)
+        """Fit the model to X (n observations by m variables; array or DataFrame)."""
+        X = validate_data(self, X, dtype=np.float64, ensure_min_samples=2)
         n, m = X.shape
         p = self.n_components
         if not 1 <= p <= m:
@@ -270,7 +276,10 @@ class QLPCA:
                 return _unit(Qs[j] @ (Qs[j].T @ y), n)
 
         F0 = H * (np.sqrt(n) / np.linalg.norm(H, axis=0))
-        rng = np.random.default_rng(self.random_state)
+        rs = self.random_state
+        if isinstance(rs, np.random.RandomState):    # scikit-learn style seed object
+            rs = rs.randint(np.iinfo(np.int32).max)
+        rng = np.random.default_rng(rs)
         U, _, _ = np.linalg.svd(H, full_matrices=False)
         starts = [np.sqrt(n) * U[:, :p]]
         for _ in range(int(self.n_init)):
@@ -294,12 +303,16 @@ class QLPCA:
         return F, best["A"], coef, shift, scale
 
     def fit_transform(self, X, y=None):
+        """Fit the model and return the object scores of the training rows."""
         return self.fit(X).scores_
+
+    @property
+    def _n_features_out(self):
+        return self.n_components
 
     # --------------------------------------------------- new data (degree 1)
     def _check(self):
-        if not hasattr(self, "scores_"):
-            raise AttributeError("estimator is not fitted")
+        check_is_fitted(self)
         if any(d != 1 for d in self._degrees):
             raise NotImplementedError("projection and reconstruction are defined for degree 1 only")
 
@@ -313,8 +326,7 @@ class QLPCA:
     def variable_transformation(self, j, n_points=200):
         """Curve of the optimal transformation of variable j on a grid over its training
         range (any degree): returns (x in the original units, f_j(x))."""
-        if not hasattr(self, "scores_"):
-            raise AttributeError("estimator is not fitted")
+        check_is_fitted(self)
         k = self.knots_[j]
         h = np.linspace(k[0], k[-1], n_points)
         basis = ispline_basis if self._kinds[j] == "I" else bspline_basis
@@ -325,7 +337,8 @@ class QLPCA:
         """Optimal transformations f_j of new rows: linear interpolation of (h_j, f_j),
         linear extrapolation outside the training range."""
         self._check()
-        H = (np.asarray(X, float) - self.mean_) / self.std_
+        X = validate_data(self, X, dtype=np.float64, reset=False)
+        H = (X - self.mean_) / self.std_
         out = np.empty_like(H)
         for j in range(H.shape[1]):
             t, f = self._curve(j)
@@ -357,7 +370,10 @@ class QLPCA:
         still returns F exactly. Rows outside plateaus are reconstructed exactly.
         """
         self._check()
-        Fh = np.asarray(scores, float) @ self.loadings_.T
+        scores = np.asarray(scores, dtype=np.float64)
+        if scores.ndim != 2 or scores.shape[1] != self.n_components:
+            raise ValueError(f"scores must have shape (n, {self.n_components})")
+        Fh = scores @ self.loadings_.T
         H = np.empty_like(Fh)
         for j in range(Fh.shape[1]):
             t, f = self._curve(j)

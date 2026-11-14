@@ -17,10 +17,10 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Mathematics",
 ]
-dependencies = ["numpy>=1.22", "scipy>=1.8"]
+dependencies = ["numpy>=1.22", "scipy>=1.8", "scikit-learn>=1.6"]
 
 [project.optional-dependencies]
-dev = ["pytest", "matplotlib"]
+dev = ["pytest", "matplotlib", "pandas"]
 notebooks = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
 
 [project.urls]

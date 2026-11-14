@@ -1,6 +1,6 @@
 # Packaging: `qlpca` as an installable Python library
 
-Status: **proposed 2026-11-14, pending the author's acceptance.** Same format as
+Status: **P1-P7 accepted by the author on 2026-11-14 (P4: option B).** Same format as
 `docs/DESIGN.md`: options compared, evidence, recommendation.
 
 The repository has two purposes: (1) a Python statistical package for direct use
@@ -119,6 +119,20 @@ reconstruction, piecewise loadings, multiple starts, a scikit-learn interface.
 **A notebook comparing `qlpca` with `Gifi::princals` (linear splines, same knots)
 is needed before any claim of difference in results**; it also replaces the SPSS
 comparisons that cannot be reproduced.
+
+## Estimator checks excluded (0.2.0)
+
+`tests/test_sklearn.py` runs scikit-learn's `parametrize_with_checks` on
+`QLPCA(n_init=2)` (default mode) and `QLPCA(legacy=True)`. The default mode passes
+every check. Two checks are marked as expected failures, for `legacy=True` only:
+
+| check | mode | reason |
+|---|---|---|
+| `check_estimators_dtypes` | `legacy=True` | fits integer-valued data, which has ties; `legacy=True` requires unique values within each variable, as the 2012 MATLAB code did (DESIGN D7) |
+| `check_positive_only_tag_during_fit` | `legacy=True` | same reason: the data of this check have ties, so the error raised is the ties error, not a refusal of negative values |
+
+The legacy mode exists to reproduce the thesis number by number, so its restriction
+is kept rather than relaxed.
 
 ## Proposed sequence
 
