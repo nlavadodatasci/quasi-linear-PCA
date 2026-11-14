@@ -8,3 +8,15 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+# Working notes and paper drafts (LaTeX), not published for now
+comparison/princals/notes/
+*.tex
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
