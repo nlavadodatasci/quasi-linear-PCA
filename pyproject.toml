@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qlpca"
-version = "0.1.0"
+version = "0.2.0"
 description = "Quasi-linear PCA: PCA with low-order spline transformations, fitted by alternating least squares"
 readme = "README.md"
 requires-python = ">=3.10"

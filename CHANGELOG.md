@@ -1,0 +1,36 @@
+# Changelog
+
+All notable changes to `qlpca` are recorded here. The project follows
+[semantic versioning](https://semver.org/); while the version is `0.x` the
+interface may still change between minor versions.
+
+Version 0.1.0 was never published: it existed only as the version number of the
+thesis-replication state of the repository. 0.2.0 is the first release.
+
+## 0.2.0 — unreleased
+
+First public release: the Python package and the replication of the PhD thesis
+(Lavado, 2012) in one repository.
+
+### Package
+- `QLPCA` estimator with two modes: a modernised default (docs/DESIGN.md, D1-D10)
+  and `legacy=True`, which reproduces the 2012 MATLAB code and thesis Tables 4.3-4.8.
+- scikit-learn transformer (`BaseEstimator`, `TransformerMixin`): `get_params` /
+  `set_params`, `clone`, pipelines, `set_output`, `get_feature_names_out`; tested with
+  scikit-learn's estimator checks (exclusions in docs/PACKAGING.md).
+- Input validation with clear messages: NaN/inf, constant variables, fewer than two
+  observations; `SmallSampleWarning` when n < 5 (degree + knots). Missing data are not
+  supported.
+- pandas DataFrames accepted; column names kept in `feature_names_in_` and used by the plots.
+- Splines (`qlpca.splines`), diagnostics (`qlpca.diagnostics`), plots (`qlpca.plots`).
+- Data: the chapter 4 data set ships with the package (`qlpca.datasets.load_st_gender`,
+  not covered by the code licence); `make_cylinder` simulates the cylinder problem.
+- New dependency: scikit-learn >= 1.6.
+
+### Replication
+- Notebooks 01-07 (07 is an introduction only); results compared with the thesis in the README.
+
+### Infrastructure
+- Version read from the package metadata (single source in `pyproject.toml`).
+- CI: tests on Python 3.10-3.13, notebook execution, wheel install with the README quick start.
+- Publishing workflow to TestPyPI and PyPI through Trusted Publishing.
