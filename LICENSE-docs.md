@@ -2,17 +2,21 @@
 
 Copyright (c) 2026 Nuno Lavado
 
-The text and figures of this repository — the notebooks in `notebooks/`, the files in
-`docs/`, and the README — are licensed under the
+The text and figures of this repository — the Markdown cells, outputs and figures of the
+notebooks in `notebooks/`, the files in `docs/`, and the README — are licensed under the
 **Creative Commons Attribution 4.0 International licence (CC BY 4.0)**.
+
+The code cells of the notebooks are licensed under the MIT licence (see `LICENSE`), like
+the rest of the source code, so that code copied from a notebook can be reused on the
+same terms as the package.
 
 You may share and adapt this material for any purpose, including commercially, provided
 you give appropriate credit, provide a link to the licence, and indicate if changes were made.
 
 Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
 
-The source code in `src/`, `tests/`, `prototype/` and `tools/` is licensed under the MIT
-licence (see `LICENSE`).
+The source code in `src/`, `tests/`, `prototype/` and `tools/`, and the code cells of the
+notebooks, are licensed under the MIT licence (see `LICENSE`).
 
 ## Material not covered by these licences
 
