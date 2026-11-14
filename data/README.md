@@ -1,6 +1,10 @@
 # Data
 
 ## `st_gender_eu15.csv` — Science & Technology gender differences, 15 EU countries
+The file is shipped inside the package, at
+[`src/qlpca/data/st_gender_eu15.csv`](../src/qlpca/data/st_gender_eu15.csv), and loaded with
+`qlpca.datasets.load_st_gender()`.
+
 Transcribed from Appendix A.1 (p. 112) of the PhD thesis and checked against the PDF
 page. It reproduces the summary statistics of thesis Table 4.1 and the PCA
 eigenvalues of Table 4.3.

@@ -1,14 +1,29 @@
-"""Data loaders. The chapter 4 data set lives in the repository's ``data/`` folder."""
+"""Data loaders. The chapter 4 data set is shipped inside the package (``qlpca/data``)."""
 import csv
 import os
+from importlib import resources
 from pathlib import Path
 
 import numpy as np
 
 
 def data_dir():
-    """Repository data folder (override with the QLPCA_DATA environment variable)."""
-    return Path(os.environ.get("QLPCA_DATA", Path(__file__).resolve().parents[2] / "data"))
+    """Folder that holds the data files: the ``QLPCA_DATA`` environment variable if set,
+    otherwise the package's own ``data`` folder."""
+    env = os.environ.get("QLPCA_DATA")
+    return Path(env) if env else Path(str(resources.files("qlpca") / "data"))
+
+
+def _open_data(name):
+    env = os.environ.get("QLPCA_DATA")
+    if env:
+        path = Path(env) / name
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"{name} was not found in the folder given by QLPCA_DATA ({env}). Unset QLPCA_DATA "
+                "to use the copy shipped with the package, or point it to a folder containing the file.")
+        return open(path, encoding="utf8", newline="")
+    return (resources.files("qlpca") / "data" / name).open(encoding="utf8", newline="")
 
 
 def load_st_gender():
@@ -16,21 +31,12 @@ def load_st_gender():
 
     Returns ``(X, variables, countries)`` with X of shape (15, 11).
 
-    The data are not shipped inside the installed package (redistribution permission is
-    pending), so this works from a clone of the repository (or with ``QLPCA_DATA`` pointing
-    to a folder that contains ``st_gender_eu15.csv``); otherwise ``FileNotFoundError`` is
-    raised. :func:`make_cylinder` needs no data file.
+    The file is shipped with the package and read with :mod:`importlib.resources`, so this
+    works after ``pip install``. Set the environment variable ``QLPCA_DATA`` to a folder
+    containing ``st_gender_eu15.csv`` to read another copy. The data are not covered by the
+    MIT licence of the code (see ``qlpca/data/README.md``).
     """
-    path = data_dir() / "st_gender_eu15.csv"
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"The chapter 4 data file was not found ({path}). It is not included in the installed "
-            "package: clone https://github.com/nlavadodatasci/quasi-linear-PCA and use the file "
-            "data/st_gender_eu15.csv, either by working from the clone (pip install -e .) or by "
-            "setting the environment variable QLPCA_DATA to the clone's data folder. "
-            "For an example that needs no data file, use qlpca.datasets.make_cylinder()."
-        )
-    with open(path, encoding="utf8", newline="") as fh:
+    with _open_data("st_gender_eu15.csv") as fh:
         rows = list(csv.reader(fh))
     header, body = rows[0], rows[1:]
     X = np.array([[float(v) for v in r[2:]] for r in body])

@@ -46,8 +46,9 @@ print(model.transform(X[:3]))     # project (new) observations on the components
 print(model.inverse_transform(model.scores_).shape)   # reconstruct data from object scores (degree 1)
 ```
 
-The thesis chapter 4 data (`load_st_gender`) are not included in the installed package; they work from a
-clone of the repository (see [Data](#data)).
+The thesis chapter 4 data are shipped with the package: `X, variables, countries = load_st_gender()`
+(see [Data](#data)). `QLPCA` is a scikit-learn transformer: it accepts DataFrames (the column names are kept
+in `feature_names_in_` and used by the plots) and works in pipelines.
 
 Diagnostics (`qlpca.diagnostics`: VAF, communalities, piecewise loadings) and plots
 (`qlpca.plots`: scree plots, transformation plots, biplots) work on a fitted model.
@@ -133,7 +134,7 @@ The numbers printed in the thesis and papers that serve as test targets are in
 
 ## Data
 
-* `data/st_gender_eu15.csv` — chapter 4 data (thesis Appendix A.1): 11 indicators of gender differences in
+* `src/qlpca/data/st_gender_eu15.csv` — chapter 4 data, shipped with the package (`qlpca.datasets.load_st_gender()`) (thesis Appendix A.1): 11 indicators of gender differences in
   science and technology for 15 EU countries, 2003–2004, compiled by Oliveira & Carvalho (2009) from Eurostat
   and *She Figures 2006*, and provided by them for the thesis. See [`data/README.md`](data/README.md).
 * The cylinder data are simulated (`qlpca.datasets.make_cylinder`).

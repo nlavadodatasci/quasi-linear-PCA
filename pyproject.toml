@@ -30,5 +30,8 @@ Homepage = "https://github.com/nlavadodatasci/quasi-linear-PCA"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+qlpca = ["data/*.csv", "data/README.md"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

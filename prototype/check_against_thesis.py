@@ -6,7 +6,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from qlpca_prototype import qlpca
 
 root = pathlib.Path(__file__).resolve().parents[1]
-rows = list(csv.reader(open(root / "data" / "st_gender_eu15.csv", encoding="utf8")))
+rows = list(csv.reader(open(root / "src" / "qlpca" / "data" / "st_gender_eu15.csv", encoding="utf8")))
 X = np.array([[float(v) for v in r[2:]] for r in rows[1:]])
 ref = json.load(open(root / "tests" / "reference_values.json", encoding="utf8"))
 

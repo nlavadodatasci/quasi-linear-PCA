@@ -48,7 +48,7 @@ jobs:
           "$RUNNER_TEMP/clean/bin/python" -m pip install "$RUNNER_TEMP"/dist/qlpca-*.whl
           cp README.md tools/check_quickstart.py "$RUNNER_TEMP/"
           cd "$RUNNER_TEMP"
-          "$RUNNER_TEMP/clean/bin/python" -I check_quickstart.py README.md --expect-no-data
+          "$RUNNER_TEMP/clean/bin/python" -I check_quickstart.py README.md
 
   notebooks:
     name: execute notebooks

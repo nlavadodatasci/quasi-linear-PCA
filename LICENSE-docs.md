@@ -20,7 +20,8 @@ notebooks, are licensed under the MIT licence (see `LICENSE`).
 
 ## Material not covered by these licences
 
-- `data/st_gender_eu15.csv` and `data/st_gender_eu15_ranks.csv`: the chapter 4 data set was
+- `src/qlpca/data/st_gender_eu15.csv` (also inside the installed package) and
+  `data/st_gender_eu15_ranks.csv`: the chapter 4 data set was
   compiled by Oliveira & Carvalho (2009) from Eurostat and *She Figures 2006* and provided to
   the author for the PhD thesis. See `data/README.md` for its origin and conditions of use.
 - `matlab_original/`: a transcription of the listings printed in the PhD thesis
