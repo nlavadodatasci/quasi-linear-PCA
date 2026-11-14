@@ -4,7 +4,7 @@
 
 This repository has two purposes:
 
-1. **A Python statistical package, `qlpca`, for direct use in data analysis** —
+1. **A Python quant package, `qlpca`, for direct use in data analysis** —
    `from qlpca import QLPCA`, then `fit` / `transform` — implementing **quasi-linear PCA (qlPCA)**.
 2. **A chapter-by-chapter replication** of the PhD thesis in which the method was proposed
    (Lavado, 2012), in notebooks that use the package.
