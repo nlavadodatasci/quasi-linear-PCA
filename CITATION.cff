@@ -14,6 +14,7 @@ authors:
   - family-names: Lavado
     given-names: Nuno
     affiliation: "Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra"
+    orcid: "https://orcid.org/0000-0001-8237-3086"
 version: 0.1.0
 license: MIT
 repository-code: "https://github.com/nlavadodatasci/quasi-linear-PCA"
