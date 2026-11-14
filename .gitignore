@@ -20,3 +20,6 @@ comparison/princals/notes/
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+# Comparison with princals: downloaded data and exported inputs (re-created at run time)
+comparison/princals/.cache/
+comparison/princals/results/inputs/

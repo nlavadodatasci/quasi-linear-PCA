@@ -1,0 +1,19 @@
+# Requirements of comparison/princals/ (not of the qlpca package).
+# Install qlpca itself from the repository root first:  pip install -e .
+#
+# pyGifi is pinned to commit 7aa81ed (GPL-3; only imported and called here).
+# Its C extension pygifi_rng (R's random number generator, needed only for the R-identical
+# random start r_seed=123) is NOT built by pip. To build it as well, use instead:
+#     python install_pygifi.py
+# which clones pyGifi at 7aa81ed, installs it, compiles pygifi_rng (needs a C compiler)
+# and copies it next to the installed package.
+pygifi @ git+https://github.com/vam-math/pyGifi@7aa81ed
+numpy
+scipy
+pandas
+matplotlib
+scikit-learn
+pytest
+nbformat
+nbclient
+ipykernel

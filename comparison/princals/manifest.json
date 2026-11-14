@@ -1,0 +1,675 @@
+{
+  "description": "Inputs and settings shared by compare.py (qlpca, pyGifi) and generate_r_ground_truth.R (Gifi). The 'knots' and 'inputs' sections are written by `python compare.py manifest` and must not be edited by hand.",
+  "packages": {
+    "Gifi": "1.0-0",
+    "pyGifi": "git+https://github.com/vam-math/pyGifi@7aa81ed"
+  },
+  "ndim": 2,
+  "datasets": {
+    "cylinder_0": {
+      "source": "qlpca.datasets.make_cylinder",
+      "n": 51,
+      "noise": 0.0,
+      "random_state": 0
+    },
+    "cylinder_10": {
+      "source": "qlpca.datasets.make_cylinder",
+      "n": 51,
+      "noise": 0.1,
+      "random_state": 0
+    },
+    "cylinder_25": {
+      "source": "qlpca.datasets.make_cylinder",
+      "n": 51,
+      "noise": 0.25,
+      "random_state": 0
+    },
+    "st_gender": {
+      "source": "qlpca.datasets.load_st_gender"
+    },
+    "neumann": {
+      "source": "pygifi.get_dataset('neumann')",
+      "note": "loaded from pyGifi at run time; also shipped with Gifi (data(neumann)); never stored in this repository"
+    },
+    "gas_turbine": {
+      "source": "UCI Gas Turbine CO and NOx Emission Data Set, doi:10.24432/C5WC95, CC BY 4.0",
+      "url": "https://archive.ics.uci.edu/static/public/551/gas+turbine+co+and+nox+emission+data+set.zip",
+      "year": 2015,
+      "n": 400,
+      "random_state": 2015,
+      "variables": [
+        "AT",
+        "AP",
+        "AH",
+        "AFDP",
+        "GTEP",
+        "TIT",
+        "TAT",
+        "TEY",
+        "CDP"
+      ],
+      "excluded": [
+        "CO",
+        "NOX"
+      ]
+    }
+  },
+  "runs": {
+    "knots1": {
+      "n_knots": 1,
+      "degree": 1,
+      "ordinal": false
+    },
+    "knots2": {
+      "n_knots": 2,
+      "degree": 1,
+      "ordinal": false
+    },
+    "monotone_deg1": {
+      "n_knots": 2,
+      "degree": 1,
+      "ordinal": true,
+      "eps": 1e-08,
+      "datasets": [
+        "cylinder_0",
+        "st_gender",
+        "neumann"
+      ]
+    },
+    "monotone_deg2": {
+      "n_knots": 2,
+      "degree": 2,
+      "ordinal": true,
+      "eps": 1e-08,
+      "datasets": [
+        "cylinder_0",
+        "st_gender",
+        "neumann"
+      ]
+    },
+    "defaults": {
+      "package_defaults": true
+    }
+  },
+  "fit": {
+    "eps": 1e-12,
+    "itmax": 100000,
+    "defaults_note": "the 'defaults' run uses each package's own defaults (princals: levels='ordinal', a knot at every distinct value, eps=1e-6; qlpca: QLPCA(n_components=2))",
+    "monotone_note": "monotone runs use eps=1e-8 and three small data sets: the inner Dykstra loop of princals stops at 1e-6 (coneRegression.R), and with degree 2 one pyGifi fit takes several minutes"
+  },
+  "tolerances": {
+    "unrestricted": {
+      "evals": 1e-05,
+      "transform_corr": 1e-08,
+      "objectscores": 0.0001,
+      "loadings": 0.0001
+    },
+    "monotone": {
+      "evals": 0.001,
+      "transform_corr": 0.001,
+      "objectscores": 0.01,
+      "loadings": 0.01
+    },
+    "defaults": {
+      "evals": 0.0001,
+      "transform_corr": 0.0001,
+      "objectscores": 0.001,
+      "loadings": 0.001
+    },
+    "note": "Both packages stop when the loss changes by less than eps in one iteration, which does not bound the distance to the optimum: with eps=1e-12 the two implementations still differ by about 1e-6 in the eigenvalues and 3e-5 in the object scores. 'transform_corr' is 1 - |correlation| per variable."
+  },
+  "knots": {
+    "cylinder_0": {
+      "1": {
+        "a": [
+          0.5943000301996968
+        ],
+        "b": [
+          0.5293121601967704
+        ],
+        "2*sqrt(b*pi)": [
+          2.5790565669871746
+        ],
+        "2*a*sqrt(b*pi)": [
+          1.2419313077728653
+        ],
+        "a*b": [
+          0.2616793647077686
+        ],
+        "a*b^2/(2*pi)": [
+          0.02435643614429364
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.29810775039316245
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.5849240208656457
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.9858723059292509
+        ],
+        "a/b": [
+          0.880411145668224
+        ],
+        "b/a": [
+          1.1358329627244885
+        ],
+        "2*a*pi/b^2": [
+          7.118235289413801
+        ]
+      },
+      "2": {
+        "a": [
+          0.38540803126856615,
+          0.6874881643611591
+        ],
+        "b": [
+          0.4078861629677953,
+          0.7765269384299872
+        ],
+        "2*sqrt(b*pi)": [
+          2.2639513156914353,
+          3.1236864036436303
+        ],
+        "2*a*sqrt(b*pi)": [
+          1.0696844063617452,
+          1.6579568727975484
+        ],
+        "a*b": [
+          0.16403496427655062,
+          0.3771554894699376
+        ],
+        "a*b^2/(2*pi)": [
+          0.007516275375482405,
+          0.041507583990600574
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.20466777000049316,
+          0.40073586063894195
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.42667246324085195,
+          0.7273780551005112
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.8434182716943853,
+          1.1441238635540447
+        ],
+        "a/b": [
+          0.6772459582638563,
+          1.4674540209115583
+        ],
+        "b/a": [
+          0.6815168388974673,
+          1.4767549019944717
+        ],
+        "2*a*pi/b^2": [
+          4.964592193674688,
+          22.27095782903238
+        ]
+      }
+    },
+    "cylinder_10": {
+      "1": {
+        "a": [
+          0.5726138300278281
+        ],
+        "b": [
+          0.5910524670033029
+        ],
+        "2*sqrt(b*pi)": [
+          2.5981718015656567
+        ],
+        "2*a*sqrt(b*pi)": [
+          1.364227850229315
+        ],
+        "a*b": [
+          0.2703608028820948
+        ],
+        "a*b^2/(2*pi)": [
+          0.025202274091372445
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.28596639163884696
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.5405163795299125
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.9715187239276242
+        ],
+        "a/b": [
+          0.9820385944716911
+        ],
+        "b/a": [
+          1.1517025290295553
+        ],
+        "2*a*pi/b^2": [
+          8.472378615470301
+        ]
+      },
+      "2": {
+        "a": [
+          0.37800778157331016,
+          0.6872657689084649
+        ],
+        "b": [
+          0.409522653039799,
+          0.7395977670272597
+        ],
+        "2*sqrt(b*pi)": [
+          2.1869144202761586,
+          3.1932666497097437
+        ],
+        "2*a*sqrt(b*pi)": [
+          0.9991424375631868,
+          1.6963034416223162
+        ],
+        "a*b": [
+          0.17681767515646254,
+          0.3759984978139175
+        ],
+        "a*b^2/(2*pi)": [
+          0.007276826673573793,
+          0.038395622095682
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.177589978511835,
+          0.428384222503011
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.43410359015796735,
+          0.7162103121832328
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.8162724575016747,
+          1.1543507069606707
+        ],
+        "a/b": [
+          0.6299850438478642,
+          1.315657289327422
+        ],
+        "b/a": [
+          0.6931752535304953,
+          1.426461666243525
+        ],
+        "2*a*pi/b^2": [
+          4.195737626900217,
+          20.851797918491194
+        ]
+      }
+    },
+    "cylinder_25": {
+      "1": {
+        "a": [
+          0.4923034148405473
+        ],
+        "b": [
+          0.5556843069204747
+        ],
+        "2*sqrt(b*pi)": [
+          2.5845797787196267
+        ],
+        "2*a*sqrt(b*pi)": [
+          1.3697651513910127
+        ],
+        "a*b": [
+          0.25655083930673134
+        ],
+        "a*b^2/(2*pi)": [
+          0.022704220357244304
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.26867520424702573
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.5480172586150168
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          1.0012610832215867
+        ],
+        "a/b": [
+          1.0984197364483281
+        ],
+        "b/a": [
+          0.9939517432956667
+        ],
+        "2*a*pi/b^2": [
+          10.793758449082185
+        ]
+      },
+      "2": {
+        "a": [
+          0.3597345759206308,
+          0.7192743997098165
+        ],
+        "b": [
+          0.3819914542690957,
+          0.7207773315327114
+        ],
+        "2*sqrt(b*pi)": [
+          2.142499531268683,
+          3.06496453616016
+        ],
+        "2*a*sqrt(b*pi)": [
+          0.8816550891884019,
+          1.951486046115427
+        ],
+        "a*b": [
+          0.17852388945648953,
+          0.362208241791936
+        ],
+        "a*b^2/(2*pi)": [
+          0.009552780819630917,
+          0.04133117974084595
+        ],
+        "a/sqrt(2*b*pi)": [
+          0.17799156648037268,
+          0.40021969717074035
+        ],
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.4390091459363626,
+          0.7074794683985977
+        ],
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))": [
+          0.7317324818995924,
+          1.154703900661727
+        ],
+        "a/b": [
+          0.5993774120191689,
+          1.4517153136710796
+        ],
+        "b/a": [
+          0.6331381343845943,
+          1.5561418151503807
+        ],
+        "2*a*pi/b^2": [
+          3.6329737696998636,
+          23.40967925745098
+        ]
+      }
+    },
+    "st_gender": {
+      "1": {
+        "researchers": [
+          6.37
+        ],
+        "scientists_engineers": [
+          4.5
+        ],
+        "investment": [
+          71.04
+        ],
+        "mf_funds": [
+          1.09
+        ],
+        "w_top": [
+          4.201
+        ],
+        "m_top": [
+          17.8
+        ],
+        "glass_ceiling": [
+          2.2
+        ],
+        "mf_phd": [
+          14.15
+        ],
+        "mf_researchers": [
+          31.22
+        ],
+        "mf_teaching": [
+          30.11
+        ],
+        "mf_boards": [
+          59.46
+        ]
+      },
+      "2": {
+        "researchers": [
+          5.96,
+          9.369000000000002
+        ],
+        "scientists_engineers": [
+          3.5900000000000003,
+          5.865
+        ],
+        "investment": [
+          30.645000000000003,
+          106.57950000000001
+        ],
+        "mf_funds": [
+          -1.376,
+          3.9065000000000007
+        ],
+        "w_top": [
+          3.735,
+          5.645000000000001
+        ],
+        "m_top": [
+          15.87,
+          20.695
+        ],
+        "glass_ceiling": [
+          1.9455500000000001,
+          2.30055
+        ],
+        "mf_phd": [
+          0.1895000000000009,
+          17.4725
+        ],
+        "mf_researchers": [
+          24.9065,
+          42.4285
+        ],
+        "mf_teaching": [
+          17.979,
+          35.621
+        ],
+        "mf_boards": [
+          57.019000000000005,
+          68.7285
+        ]
+      }
+    },
+    "neumann": {
+      "1": {
+        "temperature": [
+          130.0
+        ],
+        "pressure": [
+          197.0
+        ],
+        "density": [
+          2.61
+        ]
+      },
+      "2": {
+        "temperature": [
+          110.0,
+          140.0
+        ],
+        "pressure": [
+          155.65,
+          253.25000000000003
+        ],
+        "density": [
+          2.4379999999999997,
+          2.891
+        ]
+      }
+    },
+    "gas_turbine": {
+      "1": {
+        "AT": [
+          17.055
+        ],
+        "AP": [
+          1014.6
+        ],
+        "AH": [
+          68.9685
+        ],
+        "AFDP": [
+          3.5819
+        ],
+        "GTEP": [
+          25.7795
+        ],
+        "TIT": [
+          1080.6999999999998
+        ],
+        "TAT": [
+          549.675
+        ],
+        "TEY": [
+          132.14
+        ],
+        "CDP": [
+          11.9545
+        ]
+      },
+      "2": {
+        "AT": [
+          13.0015,
+          21.375500000000002
+        ],
+        "AP": [
+          1011.75,
+          1016.8
+        ],
+        "AH": [
+          62.0625,
+          75.274
+        ],
+        "AFDP": [
+          3.26685,
+          3.99545
+        ],
+        "GTEP": [
+          23.9395,
+          29.6115
+        ],
+        "TIT": [
+          1074.7,
+          1097.25
+        ],
+        "TAT": [
+          545.875,
+          549.93
+        ],
+        "TEY": [
+          129.86,
+          144.98000000000002
+        ],
+        "CDP": [
+          11.676,
+          12.936499999999999
+        ]
+      }
+    }
+  },
+  "inputs": {
+    "cylinder_0": {
+      "file": "results/inputs/cylinder_0.csv",
+      "md5": "c4300f076660b3987cf73a122f91abe6",
+      "n": 51,
+      "columns": [
+        "a",
+        "b",
+        "2*sqrt(b*pi)",
+        "2*a*sqrt(b*pi)",
+        "a*b",
+        "a*b^2/(2*pi)",
+        "a/sqrt(2*b*pi)",
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))",
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))",
+        "a/b",
+        "b/a",
+        "2*a*pi/b^2"
+      ]
+    },
+    "cylinder_10": {
+      "file": "results/inputs/cylinder_10.csv",
+      "md5": "357e2b679a31540cc99d73bb0ecbc3a4",
+      "n": 51,
+      "columns": [
+        "a",
+        "b",
+        "2*sqrt(b*pi)",
+        "2*a*sqrt(b*pi)",
+        "a*b",
+        "a*b^2/(2*pi)",
+        "a/sqrt(2*b*pi)",
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))",
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))",
+        "a/b",
+        "b/a",
+        "2*a*pi/b^2"
+      ]
+    },
+    "cylinder_25": {
+      "file": "results/inputs/cylinder_25.csv",
+      "md5": "282a0d3140d1431197735682130cf189",
+      "n": 51,
+      "columns": [
+        "a",
+        "b",
+        "2*sqrt(b*pi)",
+        "2*a*sqrt(b*pi)",
+        "a*b",
+        "a*b^2/(2*pi)",
+        "a/sqrt(2*b*pi)",
+        "arctan(a*sqrt(pi)/(2*sqrt(b)))",
+        "arccot(a*sqrt(pi)/(2*sqrt(b)))",
+        "a/b",
+        "b/a",
+        "2*a*pi/b^2"
+      ]
+    },
+    "st_gender": {
+      "file": "results/inputs/st_gender.csv",
+      "md5": "bf49a3d6352b748137f20a10d0368737",
+      "n": 15,
+      "columns": [
+        "researchers",
+        "scientists_engineers",
+        "investment",
+        "mf_funds",
+        "w_top",
+        "m_top",
+        "glass_ceiling",
+        "mf_phd",
+        "mf_researchers",
+        "mf_teaching",
+        "mf_boards"
+      ]
+    },
+    "neumann": {
+      "file": "results/inputs/neumann.csv",
+      "md5": "bb015f980d6fc56757c585e17d4518bf",
+      "n": 65,
+      "columns": [
+        "temperature",
+        "pressure",
+        "density"
+      ]
+    },
+    "gas_turbine": {
+      "file": "results/inputs/gas_turbine.csv",
+      "md5": "583229713af8c6e586a927995561e3ab",
+      "n": 400,
+      "columns": [
+        "AT",
+        "AP",
+        "AH",
+        "AFDP",
+        "GTEP",
+        "TIT",
+        "TAT",
+        "TEY",
+        "CDP"
+      ]
+    }
+  }
+}
