@@ -34,6 +34,26 @@ class ConvergenceWarning(UserWarning):
     """The loss change did not fall below ``tol`` within ``max_iter`` iterations."""
 
 
+class SmallSampleWarning(UserWarning):
+    """Fewer than 5 w observations for a variable whose spline has w = degree + knots
+    parameters (thesis recommendation): the fit is likely to be over-parametrised."""
+
+
+def _names(est, m):
+    names = getattr(est, "feature_names_in_", None)
+    return [str(v) for v in names] if names is not None else [f"x{j}" for j in range(m)]
+
+
+def _check_finite(est, X, what):
+    bad = ~np.isfinite(X)
+    if bad.any():
+        cols = [nm for nm, b in zip(_names(est, X.shape[1]), bad.any(0)) if b]
+        raise ValueError(
+            f"{what} contains NaN or inf ({int(bad.sum())} value(s), in variable(s) "
+            f"{', '.join(cols)}). qlpca does not handle missing or infinite values: remove or "
+            "impute them before calling QLPCA.")
+
+
 def _zscore_cols(M):
     mean = M.mean(0)
     std = M.std(0, ddof=1)
@@ -159,7 +179,8 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
     # ------------------------------------------------------------------ fit
     def fit(self, X, y=None):
         """Fit the model to X (n observations by m variables; array or DataFrame)."""
-        X = validate_data(self, X, dtype=np.float64, ensure_min_samples=2)
+        X = validate_data(self, X, dtype=np.float64, ensure_min_samples=2, ensure_all_finite=False)
+        _check_finite(self, X, "X")
         n, m = X.shape
         p = self.n_components
         if not 1 <= p <= m:
@@ -168,13 +189,17 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
             raise ValueError("init must be 'pca'")
         degs = _per_variable(self.degree, m, "degree")
         nks = _per_variable(self.n_knots, m, "n_knots")
+        names = _names(self, m)
         std = X.std(0, ddof=1)
         if np.any(std == 0):
-            raise ValueError("constant variables cannot be fitted")
+            const = [nm for nm, s in zip(names, std) if s == 0]
+            raise ValueError(f"constant variable(s) cannot be fitted: {', '.join(const)}. "
+                             "Remove them before calling QLPCA.")
         if self.legacy:
-            for j in range(m):
-                if len(np.unique(X[:, j])) < n:
-                    raise ValueError("legacy=True requires unique values within each variable")
+            tied = [names[j] for j in range(m) if len(np.unique(X[:, j])) < n]
+            if tied:
+                raise ValueError("legacy=True requires unique values within each variable "
+                                 f"(ties in {', '.join(tied)}); use the default mode for data with ties")
         self.mean_, self.std_ = X.mean(0), std
         H = (X - self.mean_) / self.std_
 
@@ -184,6 +209,14 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
                 raise ValueError("knots must have one array per variable")
             explicit = [(np.asarray(k, float) - self.mean_[j]) / self.std_[j] for j, k in enumerate(self.knots)]
         self.knots_ = [knot_sequence(H[:, j], degs[j], nks[j], explicit[j]) for j in range(m)]
+        n_int = [len(self.knots_[j]) - 2 * (degs[j] + 1) for j in range(m)]   # after merging
+        small = [names[j] for j in range(m) if n < 5 * (degs[j] + n_int[j])]
+        if small:
+            warnings.warn(
+                f"n = {n} observations is fewer than 5 (degree + knots) for variable(s) "
+                f"{', '.join(small)}: the transformations are likely over-parametrised "
+                "(thesis recommendation n >= 5 w). Consider fewer knots.",
+                SmallSampleWarning, stacklevel=2)
         self._degrees = degs
         self._kinds = ["I" if (self.legacy or self.monotone) else "B"] * m
 
@@ -337,7 +370,8 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         """Optimal transformations f_j of new rows: linear interpolation of (h_j, f_j),
         linear extrapolation outside the training range."""
         self._check()
-        X = validate_data(self, X, dtype=np.float64, reset=False)
+        X = validate_data(self, X, dtype=np.float64, reset=False, ensure_all_finite=False)
+        _check_finite(self, X, "X")
         H = (X - self.mean_) / self.std_
         out = np.empty_like(H)
         for j in range(H.shape[1]):
@@ -373,6 +407,7 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         scores = np.asarray(scores, dtype=np.float64)
         if scores.ndim != 2 or scores.shape[1] != self.n_components:
             raise ValueError(f"scores must have shape (n, {self.n_components})")
+        _check_finite(self, scores, "scores")
         Fh = scores @ self.loadings_.T
         H = np.empty_like(Fh)
         for j in range(Fh.shape[1]):

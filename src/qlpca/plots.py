@@ -9,6 +9,11 @@ INK, INK2, GRID = "#0b0b0b", "#52514e", "#e6e5e1"
 BLUE, ORANGE = "#2a78d6", "#eb6834"
 
 
+def _default_names(model, m):
+    names = getattr(model, "feature_names_in_", None)   # set when fitted on a DataFrame
+    return [str(v) for v in names] if names is not None else [f"x{j + 1}" for j in range(m)]
+
+
 def _plt():
     import matplotlib.pyplot as plt
     return plt
@@ -69,7 +74,7 @@ def transformation_plots(model, X, names=None, ncols=4, figsize=None, n_points=2
     """
     X = np.asarray(X, float)
     m = X.shape[1]
-    names = names or [f"x{j + 1}" for j in range(m)]
+    names = names or _default_names(model, m)
     nrows = int(np.ceil(m / ncols))
     plt = _plt()
     fig, axes = plt.subplots(nrows, ncols, figsize=figsize or (2.6 * ncols, 2.2 * nrows), squeeze=False)
@@ -110,7 +115,7 @@ def biplot(model, X=None, names=None, labels=None, components=(0, 1), ax=None, a
     # one common factor, chosen so that every arrow tip stays inside the range of the scores on both axes
     k = arrow_scale or 0.9 * min(np.abs(S[:, 0]).max() / max(np.abs(A[:, 0]).max(), 1e-12),
                                  np.abs(S[:, 1]).max() / max(np.abs(A[:, 1]).max(), 1e-12))
-    names = names or [f"x{j + 1}" for j in range(A.shape[0])]
+    names = names or _default_names(model, A.shape[0])
     for (x, y), nm in zip(A * k, names):
         ax.annotate("", (x, y), (0, 0), arrowprops=dict(arrowstyle="->", color=ORANGE, lw=1.2), zorder=2)
         ax.annotate(nm, (x, y), xytext=(3, 3), textcoords="offset points", fontsize=8, color=INK, zorder=4)
