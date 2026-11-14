@@ -99,7 +99,7 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
 ## Status
 - Done (2026-11-13): package complete; step 1b; notebooks 01-06 written and executed end
   to end (outputs saved in `notebooks/`); tests: `test_legacy.py`, `test_default.py`,
-  `test_package_extras.py`, `test_cylinder.py` (qualitative Table 3.3). Not pushed.
+  `test_package_extras.py`, `test_cylinder.py` (qualitative Table 3.3).
 - Notebook 05 (cylinder): qualitative only; means over 50 draws are within ~1 point of
   thesis Table 3.3 in all nine cells. Notebook 06 (chapter 4): exact for Tables 4.1,
   4.3-4.8 (<= 0.005, legacy=True); not unique: Fig. 4.5 (local optimum, start-dependent).
@@ -121,9 +121,22 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   LICENSE-docs.md (CC BY 4.0 for text/notebooks; data excluded), CITATION.cff (validated
   with cffconvert), `.github/workflows/ci.yml` (pytest on 3.10-3.13; notebooks executed
   with `tools/run_notebooks.py` on 3.12). Pushed 2026-11-13; CI green (pytest 3.10-3.13, notebooks).
-- Before a GitHub release / Zenodo DOI: (1) permission to redistribute the chapter 4 data
-  (open question 5) - the repository is already public; (2) whether notebook 07 ships as an
-  introduction only; (3) Zenodo must be linked to the GitHub account before the release.
+- Step 6, 0.2.0 (2026-11-14; PACKAGING P1-P7 accepted, P4 = B; 0.1.0 will never be
+  published, 0.2.0 is the first release archived on Zenodo): done and pushed, CI green.
+  `QLPCA` is a scikit-learn transformer (`tests/test_sklearn.py`, estimator checks; default
+  passes all, two legacy checks xfail for ties, listed in PACKAGING.md); input validation and
+  `SmallSampleWarning` (`tests/test_validation.py`); DataFrames (`feature_names_in_`, used by
+  the plots); chapter 4 data moved to `src/qlpca/data/` as package data, `QLPCA_DATA` kept;
+  version 0.2.0 from pyproject via importlib.metadata; CHANGELOG.md; CI wheel job checks the
+  README quick start and `load_st_gender()`; `.github/workflows/publish.yml` (manual run ->
+  TestPyPI, published release -> PyPI, environments "testpypi"/"pypi"). Not yet published:
+  no tag, no release; the PyPI/TestPyPI trusted publishers and GitHub environments must be
+  configured by the author.
+- Before the 0.2.0 GitHub release / Zenodo DOI: (1) `data/README.md` still says "check with
+  Oliveira & Carvalho before redistributing" - update it once the permission is confirmed;
+  (2) notebook 07 ships as an introduction only unless the author decides otherwise;
+  (3) Zenodo linked to the GitHub account; (4) README installation still uses the GitHub URL
+  (switch to `pip install qlpca` after the PyPI upload); (5) CHANGELOG date for 0.2.0.
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
