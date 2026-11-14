@@ -135,6 +135,7 @@ Please cite the article that describes the method (see also [`CITATION.cff`](CIT
 
 > Lavado, N. & Calapez, T. (2011). Principal Components Analysis with Spline Optimal Transformations for
 > Continuous Data. *IAENG International Journal of Applied Mathematics*, 41(4), 367–375.
+> <https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf>
 
 Related work:
 
@@ -148,7 +149,8 @@ Full bibliography: [`references.bib`](references.bib).
 
 ## Licence
 
-Code: [MIT](LICENSE). Text and notebooks: [CC BY 4.0](LICENSE-docs.md).
+Code, including the code cells of the notebooks: [MIT](LICENSE).
+Text and figures (notebook prose and outputs, `docs/`, this README): [CC BY 4.0](LICENSE-docs.md).
 The chapter 4 data are not covered by these licences; see [`data/README.md`](data/README.md).
 
 Author: Nuno Lavado, Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra.
