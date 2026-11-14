@@ -156,6 +156,12 @@ Related work:
 
 Full bibliography: [`references.bib`](references.bib).
 
+## Acknowledgements
+
+The method was developed under the supervision of
+[Teresa Calapez](https://orcid.org/0000-0002-8584-2906) (ISCTE-IUL), who supervised the PhD thesis
+(Lavado, 2012) and is co-author of the paper that introduced qlPCA (Lavado & Calapez, 2011).
+
 ## Licence
 
 Code, including the code cells of the notebooks: [MIT](LICENSE).

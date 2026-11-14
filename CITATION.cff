@@ -30,8 +30,10 @@ preferred-citation:
   authors:
     - family-names: Lavado
       given-names: Nuno
+      orcid: "https://orcid.org/0000-0001-8237-3086"
     - family-names: Calapez
       given-names: Teresa
+      orcid: "https://orcid.org/0000-0002-8584-2906"
   title: "Principal Components Analysis with Spline Optimal Transformations for Continuous Data"
   journal: "IAENG International Journal of Applied Mathematics"
   volume: 41
