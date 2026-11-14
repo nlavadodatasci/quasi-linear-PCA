@@ -206,6 +206,9 @@ The closest software is `princals` in the R package
 method's original paper (Lavado & Calapez, 2011). It contains no code from the Gifi R package or from
 pyGifi.
 
+A numerical comparison with `princals` (pipelines, same knots, defaults, local optima, monotone fits) is in
+[`comparison/princals/`](comparison/princals/); the two GPL-3 packages are only called there.
+
 * Gifi, A. (1990). *Nonlinear Multivariate Analysis*. Chichester: Wiley.
 
 ## Acknowledgements
