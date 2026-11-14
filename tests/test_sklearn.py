@@ -3,7 +3,8 @@
 Each excluded estimator check is listed with its reason in docs/PACKAGING.md,
 section "Estimator checks excluded".
 """
-from sklearn.utils.estimator_checks import parametrize_with_checks
+import pytest
+from sklearn.utils.estimator_checks import _get_check_estimator_ids, estimator_checks_generator
 
 from qlpca import QLPCA
 
@@ -20,7 +21,14 @@ def _expected_failed(estimator):
     return EXPECTED_FAILED_LEGACY if estimator.legacy else EXPECTED_FAILED_DEFAULT
 
 
-@parametrize_with_checks([QLPCA(n_init=2), QLPCA(legacy=True)], expected_failed_checks=_expected_failed)
+# Same checks as parametrize_with_checks, collected into a list: pytest deprecates
+# parametrize with a generator, which is what parametrize_with_checks passes.
+CHECKS = [case for est in (QLPCA(n_init=2), QLPCA(legacy=True))
+          for case in estimator_checks_generator(est, mark="xfail",
+                                                 expected_failed_checks=_expected_failed(est))]
+
+
+@pytest.mark.parametrize("estimator, check", CHECKS, ids=_get_check_estimator_ids)
 def test_sklearn_compatible(estimator, check):
     check(estimator)
 

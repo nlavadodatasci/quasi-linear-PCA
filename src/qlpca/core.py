@@ -20,6 +20,8 @@ value is positive. For V-shaped transformations corr(f_j, h_j) is close to zero 
 the orientation of that variable is fragile: read it through the transformation
 plot, not through the sign of the loading.
 """
+import os
+import sys
 import warnings
 
 import numpy as np
@@ -42,6 +44,30 @@ class SmallSampleWarning(UserWarning):
 class ExtrapolationWarning(UserWarning):
     """New observations fall outside the training range of some variable: their
     transformations are extrapolated linearly from the last segment of f_j (DESIGN D11)."""
+
+
+_INTERNAL_DIRS = None
+
+
+def _user_stacklevel():
+    """stacklevel that points warnings.warn at the first frame outside qlpca and
+    scikit-learn (e.g. past the set_output wrapper of ``transform``)."""
+    global _INTERNAL_DIRS
+    if _INTERNAL_DIRS is None:
+        import sklearn
+        _INTERNAL_DIRS = tuple(os.path.dirname(os.path.abspath(m.__file__)) + os.sep
+                               for m in (sys.modules[__package__], sklearn))
+    frame, level = sys._getframe(1), 1     # level 1 = the caller of this function
+    while frame is not None and os.path.abspath(frame.f_code.co_filename).startswith(_INTERNAL_DIRS):
+        frame, level = frame.f_back, level + 1
+    return level
+
+
+def _name_list(names, limit=5):
+    names = list(names)
+    if len(names) <= limit:
+        return ", ".join(names)
+    return f"{', '.join(names[:limit])} and {len(names) - limit} more"
 
 
 def _names(est, m):
@@ -384,22 +410,23 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         extreme value can dominate the result. Transform such variables beforehand (e.g.
         log) or do not project new data; qlPCA is a descriptive method.
         """
-        return self._transform_variables(X, stacklevel=3)
+        return self._transform_variables(X)
 
-    def _transform_variables(self, X, stacklevel):
+    def _transform_variables(self, X):
         self._check()
         X = validate_data(self, X, dtype=np.float64, reset=False, ensure_all_finite=False)
         _check_finite(self, X, "X")
-        outside = (X < self._data_min) | (X > self._data_max)
+        slack = 1e-9 * self.std_   # ignore round-off, e.g. rows rebuilt by inverse_transform
+        outside = (X < self._data_min - slack) | (X > self._data_max + slack)
         if outside.any():
             names = _names(self, X.shape[1])
             cols = [nm for nm, o in zip(names, outside.any(0)) if o]
             warnings.warn(
                 f"{int(outside.any(1).sum())} of {X.shape[0]} observation(s) fall outside the training "
-                f"range of variable(s) {', '.join(cols)}; their transformations are extrapolated "
+                f"range of variable(s) {_name_list(cols)}; their transformations are extrapolated "
                 "linearly from the last segment of each spline and may be unreliable (heavy tails: "
                 "transform the variable, e.g. log, before fitting).",
-                ExtrapolationWarning, stacklevel=stacklevel)
+                ExtrapolationWarning, stacklevel=_user_stacklevel())
         H = (X - self.mean_) / self.std_
         out = np.empty_like(H)
         for j in range(H.shape[1]):
@@ -423,7 +450,7 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         only inside the training range. With heavy-tailed variables, transform them first
         (e.g. log) or do not project new data.
         """
-        Z = self._transform_variables(X, stacklevel=3) @ self.loadings_
+        Z = self._transform_variables(X) @ self.loadings_
         return np.sqrt(self.n_samples_) * Z @ self._T
 
     def inverse_transform(self, scores):

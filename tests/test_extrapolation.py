@@ -46,8 +46,10 @@ def test_warning_on_test_rows_names_count_and_variables(split):
         model.transform(X_test)
     assert len(rec) == 1                               # transform warns once, not twice
     msg = str(rec[0].message)
-    listed = msg.split("variable(s) ")[1].split(";")[0].split(", ")
-    assert listed == [f"x{j}" for j in np.where(outside.any(0))[0]]   # array input: x0, x1, ...
+    cols = [f"x{j}" for j in np.where(outside.any(0))[0]]           # array input: x0, x1, ...
+    listed = msg.split("variable(s) ")[1].split(";")[0]
+    expected = ", ".join(cols) if len(cols) <= 5 else f"{', '.join(cols[:5])} and {len(cols) - 5} more"
+    assert listed == expected
     with pytest.warns(ExtrapolationWarning):
         model.transform_variables(X_test)
 
@@ -56,7 +58,7 @@ def test_warning_names_dataframe_columns(split):
     pd = pytest.importorskip("pandas")
     _, X_train, X_test = split
     model = QLPCA(n_components=2, n_init=1, random_state=0).fit(pd.DataFrame(X_train, columns=CYLINDER_VARIABLES))
-    with pytest.warns(ExtrapolationWarning, match=r"b/a.*2\*a\*pi/b\^2"):
+    with pytest.warns(ExtrapolationWarning, match=r"variable\(s\) a, b, 2\*sqrt\(b\*pi\), .* and 7 more;"):
         model.transform(pd.DataFrame(X_test, columns=CYLINDER_VARIABLES))
 
 
@@ -68,3 +70,33 @@ def test_values_unchanged_by_the_warning(split):
     np.testing.assert_allclose(S[38], BEFORE_ROW_38, rtol=1e-9)
     np.testing.assert_allclose(S.sum(0), BEFORE_COLUMN_SUMS, rtol=1e-9)
     assert np.abs(S).max() > 30 * np.abs(model.scores_).max()   # the heavy-tail problem itself
+
+
+def test_warning_points_at_the_caller(split):
+    """Not at sklearn's set_output wrapper or inside qlpca (stacklevel)."""
+    model, _, X_test = split
+    for method in (model.transform, model.transform_variables):
+        with pytest.warns(ExtrapolationWarning) as rec:
+            method(X_test)
+        assert rec[0].filename == __file__, rec[0].filename
+    model_pd = QLPCA(n_components=2, n_init=1, random_state=0).set_output(transform="pandas")
+    model_pd.fit(split[1])
+    with pytest.warns(ExtrapolationWarning) as rec:
+        model_pd.transform(X_test)
+    assert rec[0].filename == __file__, rec[0].filename
+
+
+def test_at_most_five_variables_listed(split):
+    model, X_train, X_test = split
+    X_far = X_test[:3] + 10 * (X_train.max(0) - X_train.min(0))   # every variable out of range
+    with pytest.warns(ExtrapolationWarning) as rec:
+        model.transform(X_far)
+    msg = str(rec[0].message)
+    assert "variable(s) x0, x1, x2, x3, x4 and 7 more;" in msg and "x5" not in msg
+
+
+def test_round_off_in_reconstruction_does_not_warn(split):
+    model, X_train, _ = split
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", ExtrapolationWarning)
+        model.transform_variables(model.inverse_transform(model.scores_))

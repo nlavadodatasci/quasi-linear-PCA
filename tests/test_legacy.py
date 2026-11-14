@@ -12,7 +12,7 @@ import pytest
 
 from functools import partial
 
-from qlpca import QLPCA as _QLPCA, ispline_basis, pseudo_indicator
+from qlpca import ExtrapolationWarning, QLPCA as _QLPCA, ispline_basis, pseudo_indicator
 from qlpca.datasets import load_st_gender
 from qlpca.splines import interior_knots
 
@@ -20,7 +20,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "prototype"))
 import qlpca_prototype as proto  # noqa: E402
 
-REF = json.load(open(ROOT / "tests" / "reference_values.json", encoding="utf8"))
+with open(ROOT / "tests" / "reference_values.json", encoding="utf8") as fh:
+    REF = json.load(fh)
 X, VARIABLES, _ = load_st_gender()
 TOL = 0.005
 QLPCA = partial(_QLPCA, legacy=True)
@@ -187,7 +188,11 @@ def test_projection_extrapolates_linearly():
     lo2 = x.copy(); lo2[0, j] = X[:, j].min() - 2.0
     hi = x.copy(); hi[0, j] = X[:, j].max() + 1.0
     hi2 = x.copy(); hi2[0, j] = X[:, j].max() + 2.0
-    f = lambda z: m.transform_variables(z)[0, j]
+
+    def f(z):                                   # every call is outside the range of x_j
+        with pytest.warns(ExtrapolationWarning):
+            return m.transform_variables(z)[0, j]
+
     assert f(lo2) - f(lo) == pytest.approx(f(lo) - m.transform_variables(
         np.where(np.arange(X.shape[1]) == j, X[:, j].min(), X[:1]))[0, j], abs=1e-9)
     assert f(hi2) - f(hi) == pytest.approx(f(hi) - m.transform_variables(

@@ -165,7 +165,10 @@ reaches 744 against at most 3.1 in training) and from `a/b` (f_j up to 18.5).
 `transform_variables` issue `ExtrapolationWarning` (exported in `qlpca`) with the number
 of observations outside the training range and the names of the variables; nothing is
 issued for the training rows, nor by `fit` or `fit_transform`. The training range is
-the minimum and maximum of each variable in the training data, in its original units.
+the minimum and maximum of each variable in the training data, in its original units,
+with a slack of 1e-9 standard deviations so that round-off does not trigger the
+warning (rows rebuilt by `inverse_transform` can exceed the range by about 1e-16
+standard deviations). The message lists at most five variables ("and N more").
 The docstrings and the README ("Use with scikit-learn") say that the method is
 descriptive and recommend transforming heavy-tailed variables beforehand (e.g. log), or
 not projecting new data.

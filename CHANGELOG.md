@@ -23,7 +23,8 @@ First public release: the Python package and the replication of the PhD thesis
   supported.
 - pandas DataFrames accepted; column names kept in `feature_names_in_` and used by the plots.
 - `ExtrapolationWarning` (exported in `qlpca`): `transform` and `transform_variables` warn when
-  observations fall outside the training range, with their number and the variables; the values
+  observations fall outside the training range, with their number and the variables (at most five
+  named); the warning points at the caller's line; the values
   returned (linear extrapolation) are unchanged (docs/DESIGN.md, D11). README section "Use with
   scikit-learn": what works, the descriptive nature of the method, extrapolation and heavy tails.
 - Splines (`qlpca.splines`), diagnostics (`qlpca.diagnostics`), plots (`qlpca.plots`).
