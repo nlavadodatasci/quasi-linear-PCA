@@ -194,6 +194,20 @@ Related work:
 
 Full bibliography: [`references.bib`](references.bib).
 
+## Related work and software
+
+qlPCA builds on the Gifi framework of nonlinear multivariate analysis (Gifi, 1990), in which variables
+are optimally transformed by alternating least squares; CATPCA (SPSS) belongs to the same family.
+The closest software is `princals` in the R package
+[Gifi](https://CRAN.R-project.org/package=Gifi) (Mair, De Leeuw & Groenen; GPL-3) and its Python port
+[pyGifi](https://github.com/vam-math/pyGifi) (GPL-3).
+
+`qlpca` is an independent implementation, written from the author's PhD thesis (Lavado, 2012) and the
+method's original paper (Lavado & Calapez, 2011). It contains no code from the Gifi R package or from
+pyGifi.
+
+* Gifi, A. (1990). *Nonlinear Multivariate Analysis*. Chichester: Wiley.
+
 ## Acknowledgements
 
 The method was developed under the supervision of

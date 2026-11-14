@@ -76,3 +76,13 @@ references:
       city: London
       country: GB
     url: "http://hdl.handle.net/10071/14371"
+  - type: book
+    authors:
+      - family-names: Gifi
+        given-names: Albert
+    title: "Nonlinear Multivariate Analysis"
+    publisher:
+      name: "Wiley"
+      city: Chichester
+    year: 1990
+    isbn: "978-0-471-92620-7"
