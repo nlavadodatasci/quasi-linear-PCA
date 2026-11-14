@@ -8,7 +8,7 @@ nonlinear relations by transforming each continuous variable with a **low-order 
 piecewise linear, with one to three interior knots — chosen jointly with the components by
 alternating least squares. Continuous variables enter directly, with no discretisation step.
 
-The original MATLAB files were lost. The listings printed in the thesis are transcribed in
+The listings printed in the thesis are transcribed in
 [`matlab_original/`](matlab_original/), and a literal numpy port of them is in
 [`prototype/`](prototype/); the package in [`src/qlpca`](src/qlpca) is tested against both.
 
