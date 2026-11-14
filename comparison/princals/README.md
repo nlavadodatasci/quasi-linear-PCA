@@ -37,7 +37,7 @@ into `src/qlpca/`, and the package was not changed after reading their code. No 
 
 | name | source | n × m |
 |---|---|---|
-| `cylinder_0`, `cylinder_10`, `cylinder_25` | `qlpca.datasets.make_cylinder(n=51, noise=0 / 0.10 / 0.25, random_state=0)` | 51 × 12 |
+| `cylinder_0`, `cylinder_10`, `cylinder_25` | `qlpca.datasets.make_cylinder(n=51, noise=0 / 0.10 / 0.25, random_state=0)`, rounded to 10 significant digits (log, exp and arctan can differ in the last bit between platforms; rounding makes the input, and its md5, the same everywhere) | 51 × 12 |
 | `st_gender` | `qlpca.datasets.load_st_gender()` (thesis chapter 4) | 15 × 11 |
 | `neumann` | `pygifi.get_dataset("neumann")`, loaded at run time (also `data(neumann)` in Gifi) | 65 × 3 |
 | `gas_turbine` | UCI *Gas Turbine CO and NOx Emission Data Set*, doi:[10.24432/C5WC95](https://doi.org/10.24432/C5WC95), CC BY 4.0 (Kaya, Tüfekci & Uzun 2019) | 400 × 9 |

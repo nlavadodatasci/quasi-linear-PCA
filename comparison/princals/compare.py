@@ -73,6 +73,9 @@ def load_dataset(name, manifest=None):
     src = spec["source"]
     if src == "qlpca.datasets.make_cylinder":
         X, names = make_cylinder(n=spec["n"], noise=spec["noise"], random_state=spec["random_state"])
+        # log/exp/arctan may differ in the last bit between platforms: round so that the input
+        # (and its md5 in the manifest) is the same on Windows, Linux and in the R workflow
+        X = np.vectorize(lambda v: float(f"{v:.{spec['significant_digits']}g}"))(X)
         return pd.DataFrame(X, columns=names)
     if src == "qlpca.datasets.load_st_gender":
         X, names, countries = load_st_gender()
