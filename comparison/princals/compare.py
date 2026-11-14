@@ -298,7 +298,8 @@ def run_all(datasets=None, runs=None, verbose=True, refresh=False):
                 if a in res and b in res:
                     d = compare(res[a], res[b], ndim)
                     row.update({f"{a}_vs_{b}_{k}": v for k, v in d.items()})
-                    row[f"{a}_vs_{b}_within_tol"] = within(d, tol)
+                    same = manifest["runs"][run].get("same_model", True) or a != "qlpca"
+                    row[f"{a}_vs_{b}_within_tol"] = within(d, tol) if same else np.nan
             row["r_ground_truth"] = "yes" if "gifi_r" in res else "pending"
             rows.append(row)
             if verbose:

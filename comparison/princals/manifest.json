@@ -85,10 +85,12 @@
         "cylinder_0",
         "st_gender",
         "neumann"
-      ]
+      ],
+      "same_model": false
     },
     "defaults": {
-      "package_defaults": true
+      "package_defaults": true,
+      "same_model": false
     }
   },
   "fit": {
@@ -101,7 +103,7 @@
     "unrestricted": {
       "evals": 1e-05,
       "transform_corr": 1e-08,
-      "objectscores": 0.0001,
+      "objectscores": 0.0005,
       "loadings": 0.0001
     },
     "monotone": {
@@ -116,7 +118,7 @@
       "objectscores": 0.001,
       "loadings": 0.001
     },
-    "note": "Both packages stop when the loss changes by less than eps in one iteration, which does not bound the distance to the optimum: with eps=1e-12 the two implementations still differ by about 1e-6 in the eigenvalues and 3e-5 in the object scores. 'transform_corr' is 1 - |correlation| per variable."
+    "note": "Both packages stop when the loss changes by less than eps in one iteration, which does not bound the distance to the optimum: with eps=1e-12 the two implementations still differ by about 1e-6 in the eigenvalues and 3e-5 in the object scores. 'transform_corr' is 1 - |correlation| per variable. Runs with same_model=false (defaults; monotone degree 2) fit different models in qlpca and princals: their qlpca differences are reported, not tested; pyGifi vs R is tested in every run."
   },
   "knots": {
     "cylinder_0": {
