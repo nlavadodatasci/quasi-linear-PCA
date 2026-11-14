@@ -15,8 +15,22 @@ def load_st_gender():
     """Science & Technology gender data, 15 EU countries (thesis Appendix A.1).
 
     Returns ``(X, variables, countries)`` with X of shape (15, 11).
+
+    The data are not shipped inside the installed package (redistribution permission is
+    pending), so this works from a clone of the repository (or with ``QLPCA_DATA`` pointing
+    to a folder that contains ``st_gender_eu15.csv``); otherwise ``FileNotFoundError`` is
+    raised. :func:`make_cylinder` needs no data file.
     """
-    with open(data_dir() / "st_gender_eu15.csv", encoding="utf8", newline="") as fh:
+    path = data_dir() / "st_gender_eu15.csv"
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"The chapter 4 data file was not found ({path}). It is not included in the installed "
+            "package: clone https://github.com/nlavadodatasci/quasi-linear-PCA and use the file "
+            "data/st_gender_eu15.csv, either by working from the clone (pip install -e .) or by "
+            "setting the environment variable QLPCA_DATA to the clone's data folder. "
+            "For an example that needs no data file, use qlpca.datasets.make_cylinder()."
+        )
+    with open(path, encoding="utf8", newline="") as fh:
         rows = list(csv.reader(fh))
     header, body = rows[0], rows[1:]
     X = np.array([[float(v) for v in r[2:]] for r in body])

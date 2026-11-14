@@ -34,17 +34,20 @@ pip install -e ".[dev,notebooks]"
 
 ```python
 from qlpca import QLPCA
-from qlpca.datasets import load_st_gender
+from qlpca.datasets import make_cylinder
 
-X, variables, countries = load_st_gender()        # thesis chapter 4: 15 countries, 11 indicators
-model = QLPCA(n_components=2, degree=1, n_knots=1, random_state=0).fit(X)
+X, names = make_cylinder(n=51, noise=0.10, random_state=0)   # simulated "cylinder problem": 12 variables
+model = QLPCA(n_components=2, degree=1, n_knots=2, random_state=0).fit(X)
 
-model.eigenvalues_          # variance accounted for by each component (4.582, 2.998)
-model.loadings_             # nonlinear loadings, one row per variable
-model.communalities_        # per-variable fit
-model.transform(X[:3])      # project (new) observations on the components (degree 1)
-model.inverse_transform(model.scores_)   # reconstruct data from object scores (degree 1)
+print(model.eigenvalues_)         # variance accounted for by each component
+print(model.loadings_.shape)      # nonlinear loadings, one row per variable
+print(model.communalities_)       # per-variable fit
+print(model.transform(X[:3]))     # project (new) observations on the components (degree 1)
+print(model.inverse_transform(model.scores_).shape)   # reconstruct data from object scores (degree 1)
 ```
+
+The thesis chapter 4 data (`load_st_gender`) are not included in the installed package; they work from a
+clone of the repository (see [Data](#data)).
 
 Diagnostics (`qlpca.diagnostics`: VAF, communalities, piecewise loadings) and plots
 (`qlpca.plots`: scree plots, transformation plots, biplots) work on a fitted model.
