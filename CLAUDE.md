@@ -1,6 +1,10 @@
 # qlPCA — reproducible notebooks for quasi-linear PCA
 
 ## Goal
+Two purposes, both explicit at the top of the README: (1) a Python statistical
+package for direct use (`from qlpca import QLPCA`), on which later application
+repositories will depend; (2) the thesis replication described below.
+
 A citable GitHub repository (Zenodo DOI) that re-implements in Python and
 replicates, chapter by chapter, the results of Nuno Lavado's PhD thesis on
 **qlPCA**: an extension of PCA to nonlinear relations through low-order spline
@@ -76,6 +80,15 @@ language: English. Proposed licences: MIT (code), CC BY 4.0 (text/notebooks).
    `preferred-citation` pointing to the IJAM 2011 paper and `references` to the
    thesis and WCE paper), LICENSE, GitHub Actions running pytest and executing the
    notebooks, GitHub release archived on Zenodo for the DOI.
+
+6. **Library release (docs/PACKAGING.md, proposed 2026-11-14 — check that the author
+   accepted it before starting).** The package must also work as an installed
+   library. 0.1.0: tag + GitHub release of the current state. 0.2.0: scikit-learn
+   compatible estimator, data loader fixed for wheel installs, input validation and
+   over-parametrisation warning, single version source, README quick start on
+   `make_cylinder`, `CITATION.cff` title, CHANGELOG, publish workflow (PyPI Trusted
+   Publishing, TestPyPI first). 0.3.0: documentation site, comparison notebook with
+   R `Gifi::princals`.
 
 ## Design: two modes (accepted by the author, 2026-11-11)
 **Read `docs/DESIGN.md`.** It compares the options for each decision (start

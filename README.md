@@ -2,11 +2,17 @@
 
 [![CI](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml/badge.svg)](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml)
 
-A Python re-implementation of **quasi-linear PCA (qlPCA)**, and a chapter-by-chapter replication of the
-PhD thesis in which it was proposed (Lavado, 2012). qlPCA extends principal components analysis to
-nonlinear relations by transforming each continuous variable with a **low-order spline** — usually
-piecewise linear, with one to three interior knots — chosen jointly with the components by
-alternating least squares. Continuous variables enter directly, with no discretisation step.
+This repository has two purposes:
+
+1. **A Python statistical package, `qlpca`, for direct use in data analysis** —
+   `from qlpca import QLPCA`, then `fit` / `transform` — implementing **quasi-linear PCA (qlPCA)**.
+2. **A chapter-by-chapter replication** of the PhD thesis in which the method was proposed
+   (Lavado, 2012), in notebooks that use the package.
+
+qlPCA extends principal components analysis to nonlinear relations by transforming each continuous
+variable with a **low-order spline** — usually piecewise linear, with one to three interior knots —
+chosen jointly with the components by alternating least squares. Continuous variables enter directly,
+with no discretisation step.
 
 The listings printed in the thesis are transcribed in
 [`matlab_original/`](matlab_original/), and a literal numpy port of them is in

@@ -2,12 +2,13 @@ cff-version: 1.2.0
 message: >-
   If you use this software, please cite the IJAM 2011 article below (preferred
   citation) and, where appropriate, this repository.
-title: "qlPCA: reproducible notebooks for quasi-linear PCA"
+title: "qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis"
 abstract: >-
-  Python re-implementation and chapter-by-chapter replication of the PhD thesis
-  on quasi-linear PCA (qlPCA): an extension of principal components analysis to
-  nonlinear relations through low-order spline transformations of continuous
-  variables, fitted by alternating least squares.
+  qlpca is a Python package for quasi-linear PCA (qlPCA): an extension of
+  principal components analysis to nonlinear relations through low-order
+  spline transformations of continuous variables, fitted by alternating least
+  squares. The repository also contains a chapter-by-chapter replication of
+  the PhD thesis in which the method was proposed (Lavado, 2012).
 type: software
 authors:
   - family-names: Lavado
