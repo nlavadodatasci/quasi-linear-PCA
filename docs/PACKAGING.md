@@ -68,6 +68,11 @@ opens with the two purposes and sends each reader to their section.
 **Recommendation: C now, B as soon as the permission is confirmed.** The README
 quick start should use `make_cylinder`.
 
+**Decision (author, 2026-11-14): B.** The chapter 4 data go into the package in the
+first release archived on Zenodo; `load_st_gender()` must then work after `pip install`
+(package data read with `importlib.resources`), and the CI wheel check must stop using
+`--expect-no-data`. Until that release, C stays in place.
+
 ## P5. Robustness expected from a library
 
 - Input validation with clear messages (NaN/inf, constant columns, too few rows).
