@@ -24,3 +24,6 @@ comparison/princals/notes/
 comparison/princals/.cache/
 comparison/princals/results/inputs/
 !comparison/princals/results/figures/*.pdf
+
+# Paper draft (private for now)
+comparison/princals/paper/
