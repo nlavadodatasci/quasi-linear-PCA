@@ -113,7 +113,7 @@ VAF (%), in sample and out of sample (5 contiguous time blocks; mean and standar
 | qlPCA, 2 knots | 2 | 80.63 | 80.50 | 1.69 | 7.81 |
 | PCA | 3 | 86.26 | 86.07 | 0.77 | — |
 | qlPCA, 1 knot | 3 | 86.83 | 86.42 | 1.07 | 0.35 |
-| qlPCA, 2 knots | 3 | 89.55 | 89.18 | 0.91 | 3.11 |
+| qlPCA, 2 knots | 3 | 89.55 | 89.18 | 0.91 | 3.12 |
 
 **Criterion (p = 2, gain >= 5 points with 1 or 2 knots): passed** (2 knots: 7.81). Hill of Towie was therefore
 not screened.
