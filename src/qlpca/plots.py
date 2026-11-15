@@ -36,11 +36,30 @@ def _style(ax, grid=True):
 
 
 def scree_plot(eigenvalues, ax=None, label=None, reference=None, reference_label=None, kaiser=True, title=None):
-    """Scree plot: eigenvalues of the correlation matrix of the (transformed) variables.
+    """Scree plot of the eigenvalues of the correlation matrix of the (transformed) variables.
 
-    ``eigenvalues`` is an array or a fitted QLPCA (its ``all_eigenvalues_`` are used).
-    ``reference`` optionally adds a second series (e.g. the PCA eigenvalues). Solutions of
-    different dimension are not nested, so compare the scree plots of p-1, p and p+1.
+    Solutions of different dimension are not nested, so compare the scree plots of p - 1, p and p + 1.
+
+    Parameters
+    ----------
+    eigenvalues : array-like or QLPCA
+        Eigenvalues, or a fitted model (its ``all_eigenvalues_`` are used).
+    ax : matplotlib Axes, optional
+        Axes to draw on.
+    label : str, optional
+        Legend label of the series.
+    reference : array-like or QLPCA, optional
+        A second series, for example the PCA eigenvalues.
+    reference_label : str, optional
+        Legend label of the reference series.
+    kaiser : bool, default=True
+        Draw the line eigenvalue = 1.
+    title : str, optional
+        Axes title.
+
+    Returns
+    -------
+    matplotlib Axes
     """
     ev = np.asarray(getattr(eigenvalues, "all_eigenvalues_", eigenvalues), float)
     if ax is None:
@@ -68,9 +87,26 @@ def scree_plot(eigenvalues, ax=None, label=None, reference=None, reference_label
 def transformation_plots(model, X, names=None, ncols=4, figsize=None, n_points=200):
     """Small multiples of the optimal transformations: f_j against the original variable.
 
-    Points are the observations, the line is the fitted spline, dashed verticals are the
-    interior knots. A flat or reversed segment shows where the relation with the other
-    variables is not linear (or not monotone).
+    Points are the observations, the line is the fitted spline, dashed verticals are the interior knots.
+
+    Parameters
+    ----------
+    model : QLPCA
+        A fitted model.
+    X : array-like of shape (n_samples, n_features)
+        The data the model was fitted on.
+    names : list of str, optional
+        Variable names (default: ``feature_names_in_`` or x1, x2, ...).
+    ncols : int, default=4
+        Number of panel columns.
+    figsize : tuple, optional
+        Figure size.
+    n_points : int, default=200
+        Grid points per curve.
+
+    Returns
+    -------
+    matplotlib Figure
     """
     X = np.asarray(X, float)
     m = X.shape[1]
@@ -98,11 +134,32 @@ def transformation_plots(model, X, names=None, ncols=4, figsize=None, n_points=2
 
 
 def biplot(model, X=None, names=None, labels=None, components=(0, 1), ax=None, arrow_scale=None):
-    """Biplot: object scores as points (optionally labelled) and loadings as arrows.
+    """Biplot: object scores as points and loadings as arrows.
 
-    Arrows are rescaled by one common factor so that all tips lie within the range of the scores. In qlPCA the
-    loadings refer to the *transformed* variables; a variable with a V-shaped
-    transformation has an arbitrary sign (see ``QLPCA`` and docs/DESIGN.md D6).
+    Arrows are rescaled by one common factor so that all tips lie within the range of the scores. The
+    loadings refer to the transformed variables; a variable with a V-shaped transformation has an
+    arbitrary sign (DESIGN D6).
+
+    Parameters
+    ----------
+    model : QLPCA
+        A fitted model.
+    X : array-like, optional
+        Not used (the training scores are drawn); kept for a uniform signature.
+    names : list of str, optional
+        Variable names for the arrows.
+    labels : list of str, optional
+        Labels of the points.
+    components : tuple of int, default=(0, 1)
+        Components on the horizontal and vertical axes.
+    ax : matplotlib Axes, optional
+        Axes to draw on.
+    arrow_scale : float, optional
+        Factor applied to the loadings (default: chosen automatically).
+
+    Returns
+    -------
+    matplotlib Axes
     """
     s, t = components
     S, A = model.scores_[:, [s, t]], model.loadings_[:, [s, t]]
@@ -131,7 +188,7 @@ def biplot(model, X=None, names=None, labels=None, components=(0, 1), ax=None, a
 
 
 def set_style():
-    """Matplotlib defaults used by the notebooks (white surface, neutral ink, thin lines)."""
+    """Set the matplotlib defaults used by the notebooks (white surface, neutral ink, thin lines)."""
     plt = _plt()
     plt.rcParams.update({
         "figure.facecolor": "white", "axes.facecolor": "white", "savefig.facecolor": "white",
@@ -141,7 +198,17 @@ def set_style():
 
 
 def algorithm_diagram(ax=None):
-    """Flow diagram of the qlPCA algorithm (thesis Figure 3.1), with the ALS loop shaded."""
+    """Flow diagram of the qlPCA algorithm (thesis Figure 3.1), with the ALS loop shaded.
+
+    Parameters
+    ----------
+    ax : matplotlib Axes, optional
+        Axes to draw on.
+
+    Returns
+    -------
+    matplotlib Axes
+    """
     from matplotlib.patches import FancyBboxPatch
     plt = _plt()
     if ax is None:

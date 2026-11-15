@@ -8,8 +8,14 @@ import numpy as np
 
 
 def data_dir():
-    """Folder that holds the data files: the ``QLPCA_DATA`` environment variable if set,
-    otherwise the package's own ``data`` folder."""
+    """Folder that holds the data files.
+
+    Returns
+    -------
+    pathlib.Path
+        The folder given by the ``QLPCA_DATA`` environment variable if set, otherwise the package's own
+        ``data`` folder.
+    """
     env = os.environ.get("QLPCA_DATA")
     return Path(env) if env else Path(str(resources.files("qlpca") / "data"))
 
@@ -27,14 +33,21 @@ def _open_data(name):
 
 
 def load_st_gender():
-    """Science & Technology gender data, 15 EU countries (thesis Appendix A.1).
+    """Science & Technology gender data, 15 EU countries (thesis chapter 4, Appendix A.1).
 
-    Returns ``(X, variables, countries)`` with X of shape (15, 11).
+    The file is shipped with the package and read with :mod:`importlib.resources`, so this works after
+    ``pip install``. Set the environment variable ``QLPCA_DATA`` to a folder containing
+    ``st_gender_eu15.csv`` to read another copy. The data are not covered by the MIT licence of the code
+    (see ``qlpca/data/README.md``).
 
-    The file is shipped with the package and read with :mod:`importlib.resources`, so this
-    works after ``pip install``. Set the environment variable ``QLPCA_DATA`` to a folder
-    containing ``st_gender_eu15.csv`` to read another copy. The data are not covered by the
-    MIT licence of the code (see ``qlpca/data/README.md``).
+    Returns
+    -------
+    X : ndarray of shape (15, 11)
+        The 11 indicators.
+    variables : list of str
+        Variable names.
+    countries : list of str
+        Country codes.
     """
     with _open_data("st_gender_eu15.csv") as fh:
         rows = list(csv.reader(fh))
@@ -50,25 +63,29 @@ CYLINDER_VARIABLES = [
 
 
 def make_cylinder(n=51, noise=0.0, random_state=None):
-    """Simulated "cylinder problem" (thesis section 3.3): 12 variables derived from the
-    height a and base area b of n cylinders.
+    """Simulated "cylinder problem" (thesis section 3.3).
+
+    Twelve variables derived from the height a and base area b of n cylinders, with a, b ~ U(0, 1) (stated
+    in the MSc thesis, chapter 6). With noise, every variable is mapped to its linearising scale (log;
+    log(tan) for the arctan variable and log(cot) for the arccot variable), normal noise with standard
+    deviation ``noise`` times the sample standard deviation of the variable on that scale is added, and
+    the result is mapped back (docs/SPEC.md sections 7 and 9).
 
     Parameters
     ----------
-    n : number of cylinders (thesis: 51).
-    noise : 0, 0.10 or 0.25 in the thesis. Every variable is mapped to its linearising scale
-        (log; log(tan) for the arctan variable and log(cot) for the arccot variable), normal
-        noise with standard deviation ``noise`` times the sample standard deviation of the
-        variable *on that linearised scale* is added, and the result is mapped back.
-    random_state : seed or ``numpy.random.Generator``.
+    n : int, default=51
+        Number of cylinders (thesis: 51).
+    noise : float, default=0.0
+        0, 0.10 or 0.25 in the thesis.
+    random_state : None, int or numpy.random.Generator, default=None
+        Seed.
 
-    Returns ``(X, names)`` with X of shape (n, 12).
-
-    Choices that the thesis does not document (docs/SPEC.md sections 7 and 9):
-    a and b are drawn from U(0, 1) (stated in the MSc thesis, chapter 6, for its own version of
-    the problem; the ranges printed in the PhD figures are consistent with it); and the noise
-    standard deviation is measured **on the linearised scale**, the reading that makes sense
-    (on the natural scale it would be hundreds of log-units for variable 12).
+    Returns
+    -------
+    X : ndarray of shape (n, 12)
+        The simulated variables.
+    names : list of str
+        Variable names.
     """
     rng = np.random.default_rng(random_state)
     a, b = rng.uniform(size=n), rng.uniform(size=n)

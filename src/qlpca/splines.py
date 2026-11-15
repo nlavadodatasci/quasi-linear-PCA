@@ -12,14 +12,39 @@ from scipy.interpolate import BSpline
 
 
 def matlab_prctile(x, q):
-    """Percentiles as MATLAB ``prctile`` (Hazen definition)."""
+    """Percentiles as MATLAB ``prctile`` (Hazen definition).
+
+    Parameters
+    ----------
+    x : array-like
+        Data.
+    q : float or array-like
+        Percentiles, between 0 and 100.
+
+    Returns
+    -------
+    float or ndarray
+        The percentiles of ``x``.
+    """
     return np.percentile(x, q, method="hazen")
 
 
 def interior_knots(x, n_knots):
-    """Interior knots at the percentiles round(100*i/(r+1)), i = 1..r.
+    """Interior knots at the percentiles round(100 i / (r + 1)), i = 1..r.
 
     Rounding is MATLAB's (half away from zero), not numpy's banker's rounding.
+
+    Parameters
+    ----------
+    x : array-like
+        Data of one variable.
+    n_knots : int
+        Number r of interior knots.
+
+    Returns
+    -------
+    ndarray of shape (n_knots,)
+        Sorted interior knots, in the units of ``x``.
     """
     if n_knots == 0:
         return np.array([])
@@ -28,11 +53,26 @@ def interior_knots(x, n_knots):
 
 
 def knot_sequence(x, degree, n_knots, interior=None):
-    """min repeated degree+1 times, interior knots, max repeated degree+1 times.
+    """Full knot sequence: min repeated degree+1 times, interior knots, max repeated degree+1 times.
 
-    ``interior`` gives explicit interior knots instead of percentiles. Interior knots
-    that coincide (ties in the data) or fall on/outside the boundary are merged or
+    Interior knots that coincide (ties in the data) or fall on or outside the boundary are merged or
     dropped, with a warning, which reduces the basis dimension (DESIGN D7).
+
+    Parameters
+    ----------
+    x : array-like
+        Data of one variable.
+    degree : int
+        Spline degree.
+    n_knots : int
+        Number of interior knots at the percentiles (ignored if ``interior`` is given).
+    interior : array-like, optional
+        Explicit interior knots.
+
+    Returns
+    -------
+    ndarray
+        The knot sequence.
     """
     x = np.asarray(x, float)
     lo, hi = x.min(), x.max()
@@ -45,24 +85,67 @@ def knot_sequence(x, degree, n_knots, interior=None):
 
 
 def bspline_basis(x, degree, knots):
-    """Dense (n, len(knots) - degree - 1) B-spline design matrix.
+    """Dense B-spline design matrix.
 
-    ``x`` must lie in [knots[degree], knots[-degree-1]]; the right endpoint is included.
+    Parameters
+    ----------
+    x : array-like of shape (n,)
+        Points, within [knots[degree], knots[-degree-1]]; the right endpoint is included.
+    degree : int
+        Spline degree.
+    knots : array-like
+        Full knot sequence.
+
+    Returns
+    -------
+    ndarray of shape (n, len(knots) - degree - 1)
+        B-spline basis functions evaluated at ``x``.
     """
     x = np.asarray(x, float)
     return BSpline.design_matrix(x, np.asarray(knots, float), degree).toarray()
 
 
 def ispline_basis(x, degree, knots):
-    """I-spline basis (n, degree + r): reverse cumulative sum of the B-splines, first dropped."""
+    """I-spline basis: reverse cumulative sum of the B-splines, the first column dropped.
+
+    Parameters
+    ----------
+    x : array-like of shape (n,)
+        Points.
+    degree : int
+        Spline degree.
+    knots : array-like
+        Full knot sequence.
+
+    Returns
+    -------
+    ndarray of shape (n, degree + r)
+        Monotone I-spline columns, from 0 to 1.
+    """
     B = bspline_basis(x, degree, knots)
     return np.cumsum(B[:, ::-1], axis=1)[:, ::-1][:, 1:]
 
 
 def pseudo_indicator(x, degree=1, n_knots=1, knots=None):
-    """Pseudo-indicator matrix G (n, degree + n_knots) of a continuous variable.
+    """Pseudo-indicator matrix G of a continuous variable (its I-spline basis).
 
-    Returns ``(G, knots)``; pass ``knots`` to evaluate on other points.
+    Parameters
+    ----------
+    x : array-like of shape (n,)
+        Data of one variable.
+    degree : int, default=1
+        Spline degree.
+    n_knots : int, default=1
+        Number of interior knots at the percentiles.
+    knots : array-like, optional
+        Full knot sequence; pass it to evaluate the basis on other points.
+
+    Returns
+    -------
+    G : ndarray of shape (n, degree + n_knots)
+        Pseudo-indicator matrix.
+    knots : ndarray
+        The knot sequence used.
     """
     if knots is None:
         knots = knot_sequence(x, degree, n_knots)

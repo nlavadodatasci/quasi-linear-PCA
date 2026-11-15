@@ -37,13 +37,17 @@ class ConvergenceWarning(UserWarning):
 
 
 class SmallSampleWarning(UserWarning):
-    """Fewer than 5 w observations for a variable whose spline has w = degree + knots
-    parameters (thesis recommendation): the fit is likely to be over-parametrised."""
+    """Fewer than 5 w observations for a variable whose spline has w = degree + knots parameters.
+
+    The thesis recommends n >= 5 w; below that the fit is likely to be over-parametrised.
+    """
 
 
 class ExtrapolationWarning(UserWarning):
-    """New observations fall outside the training range of some variable: their
-    transformations are extrapolated linearly from the last segment of f_j (DESIGN D11)."""
+    """New observations fall outside the training range of some variable.
+
+    Their transformations are extrapolated linearly from the last segment of f_j (DESIGN D11).
+    """
 
 
 _INTERNAL_DIRS = None
@@ -107,7 +111,20 @@ def _per_variable(value, m, name):
 
 
 def orthonormal_basis(B, rtol=1e-10):
-    """Orthonormal basis (rank-revealing) of the column span of B after centring the columns."""
+    """Orthonormal basis of the column span of the centred matrix ``B``.
+
+    Parameters
+    ----------
+    B : ndarray of shape (n, k)
+        Basis matrix (for example a B-spline design matrix).
+    rtol : float, default=1e-10
+        Singular values below ``rtol`` times the largest are treated as zero (rank-revealing).
+
+    Returns
+    -------
+    ndarray of shape (n, rank)
+        Orthonormal columns spanning the column space of ``B - B.mean(0)``.
+    """
     Bc = B - B.mean(0)
     U, s, _ = np.linalg.svd(Bc, full_matrices=False)
     return U[:, : int((s > rtol * s[0]).sum())]
@@ -155,42 +172,93 @@ def _als(project, F0, X, A, p, tol, max_iter):
 
 
 class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
-    """Quasi-linear PCA, a scikit-learn transformer (``fit``, ``transform``,
-    ``fit_transform``, ``inverse_transform``, ``get_feature_names_out``; works with
-    ``clone``, ``Pipeline`` and ``set_output``).
+    """Quasi-linear PCA: PCA with low-order spline transformations of the variables.
+
+    A scikit-learn transformer (``fit``, ``transform``, ``fit_transform``, ``inverse_transform``,
+    ``get_feature_names_out``; works with ``clone``, ``Pipeline`` and ``set_output``). Each variable is
+    transformed by a spline of degree ``degree`` with interior knots, and the transformations and the
+    components are fitted jointly by alternating least squares (Lavado & Calapez 2011; Lavado 2012).
 
     Parameters
     ----------
-    n_components : number of retained components p.
-    degree : spline degree v, scalar or one per variable (qlPCA proper uses 1).
-    n_knots : number of interior knots r, scalar or one per variable. Knots are placed at
-        the percentiles round(100 i/(r+1)) (MATLAB ``prctile``). ``degree=1, n_knots=0``
-        is ordinary PCA.
-    knots : optional explicit interior knots, a sequence with one array per variable, in
-        the units of the data. Overrides ``n_knots``. Ignored when ``legacy``.
-    monotone : restrict every f_j to be nondecreasing (I-splines with nonnegative
-        coefficients and a free intercept). Decreasing relations appear as negative
-        loadings. Ignored when ``legacy``.
-    init : ``"pca"``: start from the PCA scores (plus ``n_init`` random orthonormal
-        starts; the fit with the lowest loss is kept). Ignored when ``legacy``.
-    n_init : number of random starts in addition to the PCA start.
-    random_state : None, int, ``numpy.random.Generator`` or ``numpy.random.RandomState``,
-        for the random starts.
-    legacy : reproduce the 2012 MATLAB behaviour (start from the first p columns of the
-        standardised pseudo-indicator matrix, single start, eigen-decomposition update,
-        unique values required).
-    tol, max_iter : stop when |loss_k - loss_{k-1}| < tol or after max_iter iterations
-        (a ConvergenceWarning is issued in the latter case).
+    n_components : int, default=2
+        Number of retained components p.
+    degree : int or sequence of int, default=1
+        Spline degree v, one value for all variables or one per variable (qlPCA proper uses 1).
+    n_knots : int or sequence of int, default=1
+        Number of interior knots r, one value or one per variable. Knots are placed at the percentiles
+        round(100 i / (r + 1)) (MATLAB ``prctile``). ``degree=1, n_knots=0`` is ordinary PCA.
+    knots : sequence of array-like, optional
+        Explicit interior knots, one array per variable, in the units of the data. Overrides ``n_knots``.
+        Ignored when ``legacy=True``.
+    monotone : bool, default=False
+        Restrict every f_j to be nondecreasing (I-splines with nonnegative coefficients and a free
+        intercept). Decreasing relations then appear as negative loadings. Ignored when ``legacy=True``.
+    init : {"pca"}, default="pca"
+        Start from the PCA scores, plus ``n_init`` random orthonormal starts; the fit with the lowest
+        loss is kept. Ignored when ``legacy=True``.
+    n_init : int, default=10
+        Number of random starts in addition to the PCA start.
+    random_state : None, int, numpy.random.Generator or numpy.random.RandomState, default=None
+        Seed for the random starts.
+    legacy : bool, default=False
+        Reproduce the 2012 MATLAB behaviour (start from the first p columns of the standardised
+        pseudo-indicator matrix, single start, eigen-decomposition update, unique values required).
+    tol : float, default=1e-6
+        Stop when the absolute change of the loss between iterations is below ``tol``.
+    max_iter : int, default=1000
+        Maximum number of iterations; a :class:`ConvergenceWarning` is issued when it is reached.
 
-    Attributes (after ``fit``)
-    --------------------------
-    scores_ (n, p) object scores X;  transformed_ (n, m) matrix F;
-    loadings_ (m, p) matrix A;  eigenvalues_ (p,) and all_eigenvalues_ (m,) of F'F/n;
-    vaf_ (p,) percentage of variance accounted for; communalities_ (m,);
-    loss_, loss_history_, n_iter_ (of the retained fit); losses_ (final loss of each start);
-    knots_ (knot sequences, standardised scale); coef_ (per variable: coefficients on the
-    centred basis -- B-splines by default, I-splines if ``monotone`` -- or on the
-    standardised I-spline columns if ``legacy``).
+    Attributes
+    ----------
+    scores_ : ndarray of shape (n_samples, n_components)
+        Object scores X (columns with norm sqrt(n)).
+    transformed_ : ndarray of shape (n_samples, n_features)
+        Transformed variables F (centred, norm sqrt(n)).
+    loadings_ : ndarray of shape (n_features, n_components)
+        Loadings A (correlations between the transformed variables and the components).
+    eigenvalues_ : ndarray of shape (n_components,)
+        Largest eigenvalues of F'F / n.
+    all_eigenvalues_ : ndarray of shape (n_features,)
+        All eigenvalues of F'F / n.
+    vaf_ : ndarray of shape (n_components,)
+        Percentage of variance accounted for by each component.
+    communalities_ : ndarray of shape (n_features,)
+        Communality of each variable (sum of its squared loadings).
+    loss_ : float
+        Final loss of the retained fit.
+    loss_history_ : ndarray
+        Loss at each iteration of the retained fit.
+    n_iter_ : int
+        Number of iterations of the retained fit.
+    losses_ : ndarray
+        Final loss of each start (the first is the PCA start).
+    knots_ : list of ndarray
+        Full knot sequences, on the standardised scale of each variable.
+    coef_ : list of ndarray
+        Spline coefficients of each variable: on the centred B-spline basis by default, on the I-spline
+        basis if ``monotone=True``, on the standardised I-spline columns if ``legacy=True``.
+    mean_, std_ : ndarray of shape (n_features,)
+        Means and standard deviations used to standardise the variables.
+    n_features_in_ : int
+        Number of variables seen in ``fit``.
+    feature_names_in_ : ndarray of str
+        Variable names, when ``fit`` received a DataFrame.
+
+    Notes
+    -----
+    Sign convention (DESIGN D6): each transformed variable is oriented so that corr(f_j, h_j) >= 0 and
+    each component so that its loading of largest absolute value is positive. For V-shaped
+    transformations the orientation of that variable is fragile: read it through the transformation plot.
+
+    Examples
+    --------
+    >>> from qlpca import QLPCA
+    >>> from qlpca.datasets import make_cylinder
+    >>> X, names = make_cylinder(n=51, random_state=0)
+    >>> model = QLPCA(n_components=2, n_knots=2, random_state=0).fit(X)
+    >>> model.scores_.shape
+    (51, 2)
     """
 
     def __init__(self, n_components=2, degree=1, n_knots=1, knots=None, monotone=False,
@@ -209,7 +277,33 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     # ------------------------------------------------------------------ fit
     def fit(self, X, y=None):
-        """Fit the model to X (n observations by m variables; array or DataFrame)."""
+        """Fit the model to X.
+
+        Parameters
+        ----------
+        X : array-like or DataFrame of shape (n_samples, n_features)
+            Continuous variables; complete data (no NaN or inf) and at least two observations.
+        y : None
+            Ignored.
+
+        Returns
+        -------
+        self : QLPCA
+            The fitted estimator.
+
+        Raises
+        ------
+        ValueError
+            For missing or infinite values, constant variables, fewer than two observations, an invalid
+            ``n_components`` or (``legacy=True``) ties within a variable.
+
+        Warns
+        -----
+        SmallSampleWarning
+            When n < 5 (degree + knots) for some variable.
+        ConvergenceWarning
+            When ``max_iter`` is reached.
+        """
         X = validate_data(self, X, dtype=np.float64, ensure_min_samples=2, ensure_all_finite=False)
         _check_finite(self, X, "X")
         n, m = X.shape
@@ -368,7 +462,20 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return F, best["A"], coef, shift, scale
 
     def fit_transform(self, X, y=None):
-        """Fit the model and return the object scores of the training rows."""
+        """Fit the model and return the object scores of the training rows.
+
+        Parameters
+        ----------
+        X : array-like or DataFrame of shape (n_samples, n_features)
+            Training data.
+        y : None
+            Ignored.
+
+        Returns
+        -------
+        ndarray of shape (n_samples, n_components)
+            The object scores ``scores_``.
+        """
         return self.fit(X).scores_
 
     @property
@@ -389,8 +496,22 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return t, ((G - self._shift[j]) / self._scale[j]) @ self.coef_[j]
 
     def variable_transformation(self, j, n_points=200):
-        """Curve of the optimal transformation of variable j on a grid over its training
-        range (any degree): returns (x in the original units, f_j(x))."""
+        """Curve of the optimal transformation of one variable over its training range (any degree).
+
+        Parameters
+        ----------
+        j : int
+            Index of the variable.
+        n_points : int, default=200
+            Number of grid points.
+
+        Returns
+        -------
+        x : ndarray of shape (n_points,)
+            Grid in the original units of the variable.
+        f : ndarray of shape (n_points,)
+            Values of f_j on the grid.
+        """
         check_is_fitted(self)
         k = self.knots_[j]
         h = np.linspace(k[0], k[-1], n_points)
@@ -399,16 +520,30 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return h * self.std_[j] + self.mean_[j], ((G - self._shift[j]) / self._scale[j]) @ self.coef_[j]
 
     def transform_variables(self, X):
-        """Optimal transformations f_j of (new) rows, degree 1 only.
+        """Optimal transformations f_j of (new) rows; degree 1 only.
 
-        Inside the training range of variable j, f_j is the fitted piecewise-linear
-        function (linear interpolation between the knots); the training rows get exactly
-        the columns of ``transformed_``. **Outside the training range f_j is extrapolated
-        linearly** from its first or last segment, and an :class:`ExtrapolationWarning`
-        gives the number of rows concerned and the variables (DESIGN D11). Nothing in the
-        data supports the transformation there: with heavy-tailed variables a single
-        extreme value can dominate the result. Transform such variables beforehand (e.g.
-        log) or do not project new data; qlPCA is a descriptive method.
+        Inside the training range of variable j, f_j is the fitted piecewise-linear function; the training
+        rows get exactly the columns of ``transformed_``. Outside the training range f_j is extrapolated
+        linearly from its first or last segment (DESIGN D11). Nothing in the data supports the
+        transformation there: with heavy-tailed variables a single extreme value can dominate the result.
+        Transform such variables beforehand (e.g. log) or do not project new data; qlPCA is a descriptive
+        method.
+
+        Parameters
+        ----------
+        X : array-like or DataFrame of shape (n_samples, n_features)
+            Rows to transform (same variables as in ``fit``).
+
+        Returns
+        -------
+        ndarray of shape (n_samples, n_features)
+            Transformed variables.
+
+        Warns
+        -----
+        ExtrapolationWarning
+            When some rows fall outside the training range of some variable (number of rows and names of
+            the variables in the message).
         """
         return self._transform_variables(X)
 
@@ -440,31 +575,49 @@ class QLPCA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         return out
 
     def transform(self, X):
-        """Object scores of (new) rows, degree 1 only.
+        """Object scores of (new) rows; degree 1 only.
 
-        X_new = sqrt(n) F_new A (A'F'FA)^(-1/2) (DESIGN D10; equivalent to thesis eq. 3.5),
-        which returns ``scores_`` exactly for the training rows. F_new comes from
-        :meth:`transform_variables`: values outside the training range are extrapolated
-        linearly and an :class:`ExtrapolationWarning` is issued (DESIGN D11). qlPCA is a
-        descriptive method fitted to one sample; scores of new observations are reliable
-        only inside the training range. With heavy-tailed variables, transform them first
-        (e.g. log) or do not project new data.
+        X_new = sqrt(n) F_new A (A'F'FA)^(-1/2) (DESIGN D10; equivalent to thesis eq. 3.5), which returns
+        ``scores_`` exactly for the training rows. F_new comes from :meth:`transform_variables`: values outside
+        the training range are extrapolated linearly (DESIGN D11). Scores of new observations are reliable
+        only inside the training range.
+
+        Parameters
+        ----------
+        X : array-like or DataFrame of shape (n_samples, n_features)
+            Rows to project.
+
+        Returns
+        -------
+        ndarray of shape (n_samples, n_components)
+            Object scores.
+
+        Warns
+        -----
+        ExtrapolationWarning
+            When some rows fall outside the training range of some variable.
         """
         Z = self._transform_variables(X) @ self.loadings_
         return np.sqrt(self.n_samples_) * Z @ self._T
 
     def inverse_transform(self, scores):
-        """Reconstruct the data from object scores: F_hat = X A', then invert each f_j.
+        """Reconstruct the data from object scores; degree 1 only.
 
-        The inverse of a piecewise-linear f_j is a function only where f_j is strictly
-        monotone. Where it is not unique the first segment whose range contains the value
-        is used, and values outside the range of f_j are clipped. In particular, with
-        ``monotone=True`` the constrained fit often has *flat* segments (a spline
-        coefficient is exactly zero, so f_j is constant above a knot): all observations
-        on a plateau share one value of f_j and are reconstructed at the knot where the
-        plateau starts. The reconstruction error of such observations is then as large
-        as the plateau is wide, even with p = m, although ``transform_variables(H_hat)``
-        still returns F exactly. Rows outside plateaus are reconstructed exactly.
+        F_hat = X A', then each f_j is inverted. The inverse of a piecewise-linear f_j is a function only where
+        f_j is strictly monotone: where it is not unique the first segment whose range contains the value is
+        used, and values outside the range of f_j are clipped. With ``monotone=True`` the fit often has flat
+        segments (a coefficient exactly zero): all observations on a plateau are reconstructed at the knot
+        where the plateau starts, although ``transform_variables`` of the reconstruction still returns F.
+
+        Parameters
+        ----------
+        scores : array-like of shape (n_samples, n_components)
+            Object scores.
+
+        Returns
+        -------
+        ndarray of shape (n_samples, n_features)
+            Reconstructed data in the original units.
         """
         self._check()
         scores = np.asarray(scores, dtype=np.float64)
