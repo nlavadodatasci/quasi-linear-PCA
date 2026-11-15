@@ -1,0 +1,46 @@
+{
+  "title": "qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis",
+  "description": "qlpca is a Python package for quasi-linear PCA (qlPCA): an extension of principal components analysis to nonlinear relations through low-order spline transformations of continuous variables, fitted by alternating least squares. The repository also contains a chapter-by-chapter replication of the PhD thesis in which the method was proposed (Lavado, 2012).",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Lavado, Nuno",
+      "affiliation": "Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra",
+      "orcid": "0000-0001-8237-3086"
+    },
+    {
+      "name": "Calapez, Teresa",
+      "affiliation": "ISCTE - Instituto Universitário de Lisboa",
+      "orcid": "0000-0002-8584-2906"
+    }
+  ],
+  "keywords": [
+    "principal components analysis",
+    "nonlinear PCA",
+    "splines",
+    "I-splines",
+    "optimal scaling",
+    "alternating least squares"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-article",
+      "scheme": "url"
+    },
+    {
+      "identifier": "http://hdl.handle.net/10071/6202",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-thesis",
+      "scheme": "handle"
+    },
+    {
+      "identifier": "http://hdl.handle.net/10071/14371",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-conferencepaper",
+      "scheme": "handle"
+    }
+  ]
+}

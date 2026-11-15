@@ -15,6 +15,10 @@ authors:
     given-names: Nuno
     affiliation: "Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra"
     orcid: "https://orcid.org/0000-0001-8237-3086"
+  - family-names: Calapez
+    given-names: Teresa
+    affiliation: "ISCTE - Instituto Universitário de Lisboa"
+    orcid: "https://orcid.org/0000-0002-8584-2906"
 version: 0.2.0
 license: MIT
 repository-code: "https://github.com/nlavadodatasci/quasi-linear-PCA"

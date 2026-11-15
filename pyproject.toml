@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE", "LICENSE-docs.md"]
-authors = [{ name = "Nuno Lavado" }]
+authors = [{ name = "Nuno Lavado" }, { name = "Teresa Calapez" }]
 keywords = ["PCA", "nonlinear PCA", "splines", "optimal scaling", "alternating least squares"]
 classifiers = [
     "Programming Language :: Python :: 3",
