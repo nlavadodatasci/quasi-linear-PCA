@@ -1,0 +1,136 @@
+{
+  "source": "zenodo record 16807551, Kelmarsh_SCADA_2019_3085.zip, Turbine_Data_Kelmarsh_1_2019-01-01_-_2020-01-01_228.csv",
+  "records": 52560,
+  "events_used": {
+    "Stop": 118,
+    "Warning": 87,
+    "Communication": 10
+  },
+  "removed_status_events": 12387,
+  "removed_power_le_0": 3283,
+  "removed_missing": 0,
+  "records_after_filtering": 36890,
+  "sample_size": 2000,
+  "sample_seed": "numpy.random.default_rng(2026)",
+  "sample_first": "2019-01-01 08:20:00",
+  "sample_last": "2019-12-31 19:30:00",
+  "criterion": "p = 2: out-of-sample VAF of qlPCA (1 or 2 knots) - PCA >= 5.0",
+  "pca_oos": 72.6942072674979,
+  "best_qlpca_oos": 80.49923550030293,
+  "gain": 7.805028232805029,
+  "passed": true,
+  "non_monotone_1_knot": 4,
+  "non_monotone_2_knots": 5,
+  "variables": [
+    "wind_speed",
+    "power",
+    "rotor_speed",
+    "generator_speed",
+    "pitch_angle",
+    "nacelle_temp",
+    "generator_temp",
+    "gearbox_temp",
+    "ambient_temp"
+  ],
+  "correlations": {
+    "wind_speed": {
+      "wind_speed": 1.0,
+      "power": 0.9574,
+      "rotor_speed": 0.9099,
+      "generator_speed": 0.9096,
+      "pitch_angle": 0.1714,
+      "nacelle_temp": -0.485,
+      "generator_temp": 0.6842,
+      "gearbox_temp": -0.2957,
+      "ambient_temp": -0.0889
+    },
+    "power": {
+      "wind_speed": 0.9574,
+      "power": 1.0,
+      "rotor_speed": 0.9121,
+      "generator_speed": 0.9118,
+      "pitch_angle": 0.1732,
+      "nacelle_temp": -0.5612,
+      "generator_temp": 0.6666,
+      "gearbox_temp": -0.4067,
+      "ambient_temp": -0.1116
+    },
+    "rotor_speed": {
+      "wind_speed": 0.9099,
+      "power": 0.9121,
+      "rotor_speed": 1.0,
+      "generator_speed": 1.0,
+      "pitch_angle": -0.1166,
+      "nacelle_temp": -0.5068,
+      "generator_temp": 0.484,
+      "gearbox_temp": -0.3179,
+      "ambient_temp": -0.1261
+    },
+    "generator_speed": {
+      "wind_speed": 0.9096,
+      "power": 0.9118,
+      "rotor_speed": 1.0,
+      "generator_speed": 1.0,
+      "pitch_angle": -0.1177,
+      "nacelle_temp": -0.5088,
+      "generator_temp": 0.483,
+      "gearbox_temp": -0.3183,
+      "ambient_temp": -0.1294
+    },
+    "pitch_angle": {
+      "wind_speed": 0.1714,
+      "power": 0.1732,
+      "rotor_speed": -0.1166,
+      "generator_speed": -0.1177,
+      "pitch_angle": 1.0,
+      "nacelle_temp": -0.0419,
+      "generator_temp": 0.3027,
+      "gearbox_temp": -0.2273,
+      "ambient_temp": 0.083
+    },
+    "nacelle_temp": {
+      "wind_speed": -0.485,
+      "power": -0.5612,
+      "rotor_speed": -0.5068,
+      "generator_speed": -0.5088,
+      "pitch_angle": -0.0419,
+      "nacelle_temp": 1.0,
+      "generator_temp": -0.1617,
+      "gearbox_temp": 0.5879,
+      "ambient_temp": 0.7442
+    },
+    "generator_temp": {
+      "wind_speed": 0.6842,
+      "power": 0.6666,
+      "rotor_speed": 0.484,
+      "generator_speed": 0.483,
+      "pitch_angle": 0.3027,
+      "nacelle_temp": -0.1617,
+      "generator_temp": 1.0,
+      "gearbox_temp": -0.0019,
+      "ambient_temp": 0.1023
+    },
+    "gearbox_temp": {
+      "wind_speed": -0.2957,
+      "power": -0.4067,
+      "rotor_speed": -0.3179,
+      "generator_speed": -0.3183,
+      "pitch_angle": -0.2273,
+      "nacelle_temp": 0.5879,
+      "generator_temp": -0.0019,
+      "gearbox_temp": 1.0,
+      "ambient_temp": 0.2657
+    },
+    "ambient_temp": {
+      "wind_speed": -0.0889,
+      "power": -0.1116,
+      "rotor_speed": -0.1261,
+      "generator_speed": -0.1294,
+      "pitch_angle": 0.083,
+      "nacelle_temp": 0.7442,
+      "generator_temp": 0.1023,
+      "gearbox_temp": 0.2657,
+      "ambient_temp": 1.0
+    }
+  }
+}

@@ -96,6 +96,35 @@ checked on 2026-11-15: 2.1.0, record [22662930](https://zenodo.org/records/22662
 doi:[10.5281/zenodo.22662930](https://doi.org/10.5281/zenodo.22662930); concept DOI
 [10.5281/zenodo.14870021](https://doi.org/10.5281/zenodo.14870021).
 
-## Results
+## Results (run on 2026-11-15)
 
-See `results/` and the section added below after the run.
+### Kelmarsh 1, 2019
+
+Filtering: 52 560 records; 12 387 removed for overlapping a Stop (118 events), Warning (87) or Communication
+(10) event; 3 283 removed for `Power <= 0`; 0 for missing values; 36 890 remain. Sample of 2000 records from
+2019-01-01 08:20 to 2019-12-31 19:30.
+
+VAF (%), in sample and out of sample (5 contiguous time blocks; mean and standard error over the blocks):
+
+| model | p | in sample | out of sample | se | out-of-sample gain over PCA |
+|---|---|---|---|---|---|
+| PCA | 2 | 72.32 | 72.69 | 2.77 | — |
+| qlPCA, 1 knot | 2 | 76.42 | 75.73 | 3.30 | 3.04 |
+| qlPCA, 2 knots | 2 | 80.63 | 80.50 | 1.69 | 7.81 |
+| PCA | 3 | 86.26 | 86.07 | 0.77 | — |
+| qlPCA, 1 knot | 3 | 86.83 | 86.42 | 1.07 | 0.35 |
+| qlPCA, 2 knots | 3 | 89.55 | 89.18 | 0.91 | 3.11 |
+
+**Criterion (p = 2, gain >= 5 points with 1 or 2 knots): passed** (2 knots: 7.81). Hill of Towie was therefore
+not screened.
+
+Non-monotone transformations (p = 2, whole sample): 4 of 9 with 1 knot (wind speed, power, rotor speed,
+generator speed), 5 of 9 with 2 knots (the same and generator temperature).
+
+Notes on the data, from the numbers: rotor speed and generator speed have correlation 1.0000 (to four
+decimals) in the sample. The pitch angle equals its minimum (0°) in 58 % of the records, so its two percentile
+knots coincide and are merged into one.
+
+Files: `screening_summary.csv`, `kelmarsh_vaf.csv` (every block), `kelmarsh_transformations.pdf/.png`,
+`kelmarsh_piecewise_loadings.csv`, `kelmarsh_monotonicity.csv`, `kelmarsh_sample_info.json` (filter counts,
+sample, correlations).

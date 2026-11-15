@@ -1,0 +1,10 @@
+variable,non_monotone_1_knots,non_monotone_2_knots
+wind_speed,True,True
+power,True,True
+rotor_speed,True,True
+generator_speed,True,True
+pitch_angle,False,False
+nacelle_temp,False,False
+generator_temp,False,True
+gearbox_temp,False,False
+ambient_temp,False,False

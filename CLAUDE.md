@@ -159,6 +159,11 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   D (automatic choice inside QLPCA) rejected; depends on `extrapolate="clip"` (D11). Not implemented:
   src/qlpca/ unchanged. Evidence: `comparison/princals/knot_selection.py` -> results/knot_selection.csv.
 
+- Application screening (2026-11-15): `comparison/applications/` (README with the approval criterion committed
+  before the run, screening.py, results/). Kelmarsh (Zenodo 16807551, CC-BY-4.0), turbine 1, 2019, 9 SCADA
+  variables, n = 2000 (seed 2026), 5 contiguous time blocks: p = 2 out-of-sample VAF PCA 72.69, qlPCA 2 knots
+  80.50 (gain 7.81 >= 5): passed; Hill of Towie not screened. Data downloaded to .cache/ (git-ignored).
+
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
 - Standardise H with the sample sd (ddof=1); F has norm sqrt(n) (ddof=0).
