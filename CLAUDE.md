@@ -153,6 +153,12 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   within tolerance in 12/12 same-knot cases and 3/3 monotone degree 1; with defaults pyGifi and R differ on
   the cylinder data (and slightly on neumann). R JSON loadings are (ndim, m); compare.py transposes them.
 
+- D12 (choice of the number of knots) recorded in docs/DESIGN.md as "proposed for 0.3.0" (2026-11-15):
+  recommendation B (`score(X)`, out-of-sample VAF with new rows clipped to the training range, for
+  GridSearchCV) and C (`QLPCACV`, grid {1,2,3,4}, cv=5, one-SE rule, n >= 5(degree+knots), cv_results_);
+  D (automatic choice inside QLPCA) rejected; depends on `extrapolate="clip"` (D11). Not implemented:
+  src/qlpca/ unchanged. Evidence: `comparison/princals/knot_selection.py` -> results/knot_selection.csv.
+
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
 - Standardise H with the sample sd (ddof=1); F has norm sqrt(n) (ddof=0).

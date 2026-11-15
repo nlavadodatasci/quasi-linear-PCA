@@ -176,6 +176,46 @@ not projecting new data.
 **Deferred to 0.3.0:** option C as a parameter `extrapolate={"linear","clip"}`, with
 `"linear"` as the default so that results do not change.
 
+## D12. Choice of the number of knots (status: proposed for 0.3.0)
+
+Nothing in `src/qlpca/` implements this yet.
+
+**Problem.** The VAF on the fitting sample always grows with the number of knots: every extra knot
+enlarges the spline space of each variable, so the in-sample criterion cannot choose it. Today the user
+picks `n_knots` by hand, guided by the transformation plots and the warning n < 5 (degree + knots).
+
+| option | pros | cons |
+|---|---|---|
+| A. manual choice (today) | simple; the analyst keeps control; matches the descriptive use of the method and the thesis | no guard against over-fitting beyond `SmallSampleWarning`; results depend on the analyst |
+| B. a `score(X)` method: VAF of the p components on new data, with new rows limited to the training range; usable with `GridSearchCV` | follows the scikit-learn convention (estimators that can be scored); any splitting scheme and grid; no new class | needs `extrapolate="clip"` (D11) to be well defined; the user has to set up the search; plain maximisation of the mean favours many knots when the curve is flat |
+| C. a `QLPCACV` class: grid `n_knots` in {1, 2, 3, 4} at the percentiles, `cv=5`, one-standard-error rule, grid limited by n >= 5 (degree + knots), results in `cv_results_` | one call; parsimonious choice (one-SE rule); the limit avoids fits the thesis advises against; same pattern as `LassoCV`, `RidgeCV` | one more public class to document and test; cost of 5 x 4 fits (each with `n_init` starts); a fixed grid and knot placement |
+| D. automatic choice inside `QLPCA` by default | nothing to do for the user | cost of every fit multiplied; results change with the random folds unless seeded (reproducibility); unstable on small samples (n = 15 in thesis chapter 4); against the scikit-learn convention that an estimator fits the model it is given and model selection is done outside it |
+
+**Recommendation: B and C in 0.3.0; D rejected** (cost, reproducibility, small samples, scikit-learn
+convention). Both B and C depend on the option `extrapolate="clip"` deferred in D11: held-out rows outside the
+training range must not be extrapolated linearly.
+
+**Preliminary evidence** (`comparison/princals/knot_selection.py`, written to
+`comparison/princals/results/knot_selection.csv`). Out-of-sample VAF (%), p = 2, degree 1, default mode,
+5-fold cross-validation repeated 4 times (`RepeatedKFold(5, 4, random_state=0)`, 20 splits); test rows
+clipped to the training range; VAF = share of the test rows' transformed variance captured by the training
+loading directions, ||F_test V||^2 / ||F_test||^2; mean over the 20 splits:
+
+| data | 0 knots | 1 | 2 | 3 | 4 | 6 |
+|---|---|---|---|---|---|---|
+| cylinders, n = 51, no noise | 83.4 | 94.5 | 96.5 | 97.3 | 97.7 | 98.3 |
+| cylinders, n = 51, noise 0.25 | 72.8 | 87.6 | 89.5 | 90.6 | 91.1 | 91.4 |
+| gas turbine, n = 400 (2015 sample) | 79.6 | 81.7 | 82.0 | 82.3 | 82.6 | 82.3 |
+
+Standard errors (sd / sqrt(20)) between 0.2 and 1.1. On the cylinders the out-of-sample VAF still rises with
+6 knots, by less with each knot; on the gas turbine data it stops rising after 4 knots. The one-SE rule on
+the grid {1, 2, 3, 4} of option C would choose 4 knots (cylinders, no noise: the maximum), 3 (cylinders, noise
+0.25) and 3 (gas turbine); maximising the mean would choose 4 in all three.
+
+**Open:** the criterion on the original scale of the variables (reconstruction error) instead of the
+transformed scale; knots per variable (a greedy search over variables); the location of the knots, not only
+their number.
+
 ---
 
 ## Public interface
