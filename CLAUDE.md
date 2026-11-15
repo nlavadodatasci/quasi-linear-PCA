@@ -141,10 +141,10 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   keywords, related identifiers: IJAM URL, thesis and WCE handles; no invented DOIs); the redistribution
   warning removed from data/README.md; sdist and wheel checked (twine --strict; no PDFs, comparison/,
   notes/, paper/, .tex; data CSV included). Notebook 07 ships as an introduction only.
-- Still to do by the author: trusted publishers on TestPyPI and PyPI (project qlpca, workflow publish.yml,
-  environments testpypi / pypi); GitHub environments "testpypi" and "pypi"; link the repository in Zenodo
-  (GitHub integration) before the release; date of 0.2.0 in CHANGELOG.md; tag v0.2.0 and GitHub release;
-  afterwards switch the README installation to `pip install qlpca` and add the Zenodo DOI.
+- 0.2.0 released 2026-11-15 on PyPI (`pip install qlpca`) and Zenodo: concept DOI 10.5281/zenodo.24260718
+  (all versions), version DOI 10.5281/zenodo.24260719. README, site and CITATION.cff (`doi`, `identifiers`)
+  give the DOIs and `pip install qlpca`; CHANGELOG has an "Unreleased" section for this.
+- Next: 0.3.0 - D11 (`extrapolate="clip"`) and D12 (`score()`, `QLPCACV`), see docs/DESIGN.md.
 
 - Comparison with princals (2026-11-14): `comparison/princals/` (README, manifest.json with explicit
   knots and input md5, compare.py, generate_r_ground_truth.R, install_pygifi.py, notebook

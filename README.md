@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml/badge.svg)](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml)
 [![Docs](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/docs.yml/badge.svg)](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/docs.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24260718.svg)](https://doi.org/10.5281/zenodo.24260718)
+[![PyPI](https://img.shields.io/pypi/v/qlpca)](https://pypi.org/project/qlpca/)
 
 **Documentation: <https://nlavadodatasci.github.io/quasi-linear-PCA/>** (user guide, API reference, thesis replication, comparisons).
 
@@ -39,6 +41,8 @@ The listings printed in the thesis are transcribed in
 Requires Python 3.10 or later.
 
 ```bash
+pip install qlpca
+# development version (main branch):
 pip install "git+https://github.com/nlavadodatasci/quasi-linear-PCA"
 # or, to run the tests and notebooks from a clone:
 git clone https://github.com/nlavadodatasci/quasi-linear-PCA
@@ -198,10 +202,13 @@ Please cite the article that describes the method (see also [`CITATION.cff`](CIT
 > Continuous Data. *IAENG International Journal of Applied Mathematics*, 41(4), 367–375.
 > <https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf>
 
-To cite the software itself (the Zenodo DOI will be added with the first release):
+The software is archived on Zenodo. To cite it:
 
-> Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis*,
-> version 0.2.0. <https://github.com/nlavadodatasci/quasi-linear-PCA>
+> Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis*.
+> Zenodo. <https://doi.org/10.5281/zenodo.24260718>
+
+This concept DOI always resolves to the latest version. To cite an exact version, use the DOI of that version
+shown on Zenodo (version 0.2.0: <https://doi.org/10.5281/zenodo.24260719>).
 
 Related work:
 

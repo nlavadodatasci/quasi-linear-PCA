@@ -21,6 +21,14 @@ authors:
     orcid: "https://orcid.org/0000-0002-8584-2906"
 version: 0.2.0
 date-released: 2026-11-15
+doi: 10.5281/zenodo.24260718
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24260718
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: 10.5281/zenodo.24260719
+    description: "Version 0.2.0"
 license: MIT
 repository-code: "https://github.com/nlavadodatasci/quasi-linear-PCA"
 keywords:

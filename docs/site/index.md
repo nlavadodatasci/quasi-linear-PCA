@@ -29,14 +29,14 @@ points of out-of-sample variance over linear PCA, in all six turbines of a wind 
 Requires Python 3.10 or later.
 
 ```bash
+pip install qlpca
+# development version (main branch):
 pip install "git+https://github.com/nlavadodatasci/quasi-linear-PCA"
 # or, to run the tests and notebooks from a clone:
 git clone https://github.com/nlavadodatasci/quasi-linear-PCA
 cd quasi-linear-PCA
 pip install -e ".[dev,notebooks]"
 ```
-
-The package is not yet on PyPI; `pip install qlpca` will work after the first release.
 
 ## Quick start
 
@@ -64,10 +64,14 @@ The thesis chapter 4 data ship with the package: `X, variables, countries = qlpc
 > Continuous Data. *IAENG International Journal of Applied Mathematics*, 41(4), 367–375.
 > <https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf>
 
-**Software** — Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD
-thesis*, version 0.2.0. <https://github.com/nlavadodatasci/quasi-linear-PCA>. The Zenodo DOI is **pending** (it
-will be created with the first release); see
-[`CITATION.cff`](https://github.com/nlavadodatasci/quasi-linear-PCA/blob/main/CITATION.cff).
+**Software** — The software is archived on Zenodo. To cite it:
+
+> Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis*.
+> Zenodo. <https://doi.org/10.5281/zenodo.24260718>
+
+This concept DOI always resolves to the latest version. To cite an exact version, use the DOI of that version
+shown on Zenodo (version 0.2.0: <https://doi.org/10.5281/zenodo.24260719>).
+See also [`CITATION.cff`](https://github.com/nlavadodatasci/quasi-linear-PCA/blob/main/CITATION.cff).
 
 Related work:
 
