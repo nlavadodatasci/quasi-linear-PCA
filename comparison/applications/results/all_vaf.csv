@@ -1,0 +1,37 @@
+turbine,model,parameters,VAF in sample,VAF out of sample,se,paired gain,se (gain)
+Kelmarsh_1,PCA,8,72.5739,71.9493,4.0124,,
+Kelmarsh_1,percentile knots,23,80.6315,80.4770,2.1032,8.5277,1.9701
+Kelmarsh_1,"percentiles, same number of knots",27,81.0245,80.9332,2.0327,8.9839,2.0617
+Kelmarsh_1,"percentiles, same number of knots, monotone",27,79.1986,78.8209,3.0764,6.8716,1.0986
+Kelmarsh_1,control regions (2018),28,83.4467,82.9144,2.1592,10.9651,2.1453
+Kelmarsh_1,"control regions (2018), monotone",28,82.6426,81.9673,2.5506,10.0180,1.8003
+Kelmarsh_2,PCA,8,70.0621,69.4238,4.1542,,
+Kelmarsh_2,percentile knots,23,81.5427,81.3519,2.3032,11.9281,1.9229
+Kelmarsh_2,"percentiles, same number of knots",27,82.3182,82.1893,2.2937,12.7654,1.8986
+Kelmarsh_2,"percentiles, same number of knots, monotone",27,79.8898,79.3928,3.5609,9.9689,0.7317
+Kelmarsh_2,control regions (2018),28,83.1061,82.7252,2.5222,13.3014,1.8352
+Kelmarsh_2,"control regions (2018), monotone",28,81.9620,81.4847,3.1099,12.0609,1.4441
+Kelmarsh_3,PCA,8,70.3742,69.5524,3.9363,,
+Kelmarsh_3,percentile knots,23,78.2287,77.5907,2.0633,8.0383,2.3454
+Kelmarsh_3,"percentiles, same number of knots",27,78.6899,78.2338,1.9900,8.6814,2.3294
+Kelmarsh_3,"percentiles, same number of knots, monotone",27,77.0422,76.4217,2.9949,6.8693,1.6588
+Kelmarsh_3,control regions (2018),28,81.8002,81.0313,2.5295,11.4789,2.7647
+Kelmarsh_3,"control regions (2018), monotone",28,80.6516,79.7859,3.0391,10.2335,2.4871
+Kelmarsh_4,PCA,8,69.9012,69.1403,4.4853,,
+Kelmarsh_4,percentile knots,23,80.9495,80.5916,2.3619,11.4513,2.2962
+Kelmarsh_4,"percentiles, same number of knots",27,81.6439,81.3621,2.3377,12.2219,2.3052
+Kelmarsh_4,"percentiles, same number of knots, monotone",27,78.7564,78.0663,3.7222,8.9260,0.8082
+Kelmarsh_4,control regions (2018),28,82.8206,82.2287,2.6356,13.0884,2.0911
+Kelmarsh_4,"control regions (2018), monotone",28,81.3825,80.5444,3.4034,11.4041,1.6053
+Kelmarsh_5,PCA,8,69.0822,68.8506,3.1955,,
+Kelmarsh_5,percentile knots,23,79.4082,79.4463,1.4367,10.5957,2.4172
+Kelmarsh_5,"percentiles, same number of knots",27,79.9441,80.0642,1.3792,11.2136,2.4511
+Kelmarsh_5,"percentiles, same number of knots, monotone",27,76.4033,76.1032,3.1185,7.2525,1.1387
+Kelmarsh_5,control regions (2018),28,81.7424,81.2141,2.6374,12.3635,1.5311
+Kelmarsh_5,"control regions (2018), monotone",28,80.5193,79.8894,3.4046,11.0388,1.4012
+Kelmarsh_6,PCA,8,69.6655,69.9313,3.1702,,
+Kelmarsh_6,percentile knots,23,77.5120,77.8073,1.6778,7.8760,2.4477
+Kelmarsh_6,"percentiles, same number of knots",27,77.8438,78.2879,1.6723,8.3566,2.4225
+Kelmarsh_6,"percentiles, same number of knots, monotone",27,75.6408,75.7820,2.4620,5.8507,1.8292
+Kelmarsh_6,control regions (2018),28,81.6252,81.7098,2.3821,11.7785,3.2165
+Kelmarsh_6,"control regions (2018), monotone",28,80.0869,80.2046,2.6310,10.2733,3.0196

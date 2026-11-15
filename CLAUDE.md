@@ -173,6 +173,9 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   Controls: percentiles with the same number of knots per variable (27 parameters vs 28): control regions
   minus that model 1.98 (se 0.43), monotone 3.15 (0.72). Below B1, 26 start-up/idle records (pitch > 5 or rotor
   < 8.0); without them the decreasing lowest segments of wind, power and rotor remain (gain 7.88, se 0.75).
+  All six turbines (protocol committed before the run; `kelmarsh_all_turbines.py`, results all_*): Kelmarsh 1
+  reproduced (10.97, 1.98); none excluded; control regions minus same-number percentiles positive in 6/6,
+  mean 1.79 (se 0.47) unrestricted, 3.21 (0.35) monotone; unchanged without warning_active records.
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

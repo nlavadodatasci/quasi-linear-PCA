@@ -1,0 +1,25 @@
+turbine,version,data,difference,se
+Kelmarsh_1,unrestricted,all records,1.9812,0.4291
+Kelmarsh_1,monotone,all records,3.1464,0.7218
+Kelmarsh_1,unrestricted,without warning_active,2.0295,0.5061
+Kelmarsh_1,monotone,without warning_active,3.0293,0.8051
+Kelmarsh_2,unrestricted,all records,0.5359,0.7005
+Kelmarsh_2,monotone,all records,2.0920,0.8039
+Kelmarsh_2,unrestricted,without warning_active,0.5300,0.7123
+Kelmarsh_2,monotone,without warning_active,2.0821,0.8135
+Kelmarsh_3,unrestricted,all records,2.7975,0.9374
+Kelmarsh_3,monotone,all records,3.3642,0.8546
+Kelmarsh_3,unrestricted,without warning_active,2.7933,0.9502
+Kelmarsh_3,monotone,without warning_active,3.3406,0.8345
+Kelmarsh_4,unrestricted,all records,0.8665,1.0718
+Kelmarsh_4,monotone,all records,2.4781,0.9300
+Kelmarsh_4,unrestricted,without warning_active,0.7805,0.7526
+Kelmarsh_4,monotone,without warning_active,2.4255,0.9832
+Kelmarsh_5,unrestricted,all records,1.1499,1.5106
+Kelmarsh_5,monotone,all records,3.7863,0.5173
+Kelmarsh_5,unrestricted,without warning_active,1.0391,1.5901
+Kelmarsh_5,monotone,without warning_active,3.7039,0.5330
+Kelmarsh_6,unrestricted,all records,3.4220,1.3668
+Kelmarsh_6,monotone,all records,4.4226,1.3833
+Kelmarsh_6,unrestricted,without warning_active,3.4332,1.3631
+Kelmarsh_6,monotone,without warning_active,4.4257,1.3812

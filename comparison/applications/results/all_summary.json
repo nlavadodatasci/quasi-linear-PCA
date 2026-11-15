@@ -1,0 +1,39 @@
+{
+  "turbines_included": [
+    "Kelmarsh_1",
+    "Kelmarsh_2",
+    "Kelmarsh_3",
+    "Kelmarsh_4",
+    "Kelmarsh_5",
+    "Kelmarsh_6"
+  ],
+  "excluded": {},
+  "kelmarsh_1_check": {
+    "control_gain": 10.97,
+    "difference": 1.98
+  },
+  "monotone, all records": {
+    "positive": 6,
+    "turbines": 6,
+    "mean": 3.2149111762099065,
+    "se_between_turbines": 0.3471723714555786
+  },
+  "monotone, without warning_active": {
+    "positive": 6,
+    "turbines": 6,
+    "mean": 3.1678772793006993,
+    "se_between_turbines": 0.3487395871755673
+  },
+  "unrestricted, all records": {
+    "positive": 6,
+    "turbines": 6,
+    "mean": 1.7921645433224231,
+    "se_between_turbines": 0.46726177241083056
+  },
+  "unrestricted, without warning_active": {
+    "positive": 6,
+    "turbines": 6,
+    "mean": 1.7676181524943895,
+    "se_between_turbines": 0.4806828971585282
+  }
+}

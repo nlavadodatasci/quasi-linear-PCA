@@ -79,16 +79,17 @@ def _overlap(t0, events):
     return out
 
 
-def load_kelmarsh(year=2019):
+def load_kelmarsh(year=2019, turbine=None):
     """Filtered ten-minute records of Kelmarsh 1 for one year (README: filtering), with a column
     warning_active (record overlaps a Warning event; not a model variable), and the counts per step."""
     spec = KELMARSH
+    turbine = turbine or spec["turbine"]
     fname = spec["files"][year]
     url = f"https://zenodo.org/api/records/{spec['record']}/files/{fname}/content"
     z = zipfile.ZipFile(_download(url, CACHE / fname))
     names = z.namelist()
-    data_name = next(n for n in names if n.startswith(f"Turbine_Data_{spec['turbine']}_"))
-    status_name = next(n for n in names if n.startswith(f"Status_{spec['turbine']}_"))
+    data_name = next(n for n in names if n.startswith(f"Turbine_Data_{turbine}_"))
+    status_name = next(n for n in names if n.startswith(f"Status_{turbine}_"))
     d = pd.read_csv(z.open(data_name), skiprows=9, low_memory=False, encoding="latin-1")
     d.columns = [c.lstrip("# ") for c in d.columns]
     cols = {k: next(c for c in d.columns if c.startswith(p)) for k, p in spec["variables"].items()}
@@ -96,7 +97,8 @@ def load_kelmarsh(year=2019):
     X = d[list(cols.values())].astype(float)
     X.columns = list(cols)
     t0 = t.to_numpy()
-    info = {"source": f"zenodo record {spec['record']}, {fname}, {data_name}", "year": year, "records": int(len(X))}
+    info = {"source": f"zenodo record {spec['record']}, {fname}, {data_name}", "turbine": turbine, "year": year,
+            "records": int(len(X))}
 
     status = pd.read_csv(z.open(status_name), skiprows=9)
     miss = X.isna().any(axis=1).to_numpy()
