@@ -128,3 +128,40 @@ knots coincide and are merged into one.
 Files: `screening_summary.csv`, `kelmarsh_vaf.csv` (every block), `kelmarsh_transformations.pdf/.png`,
 `kelmarsh_piecewise_loadings.csv`, `kelmarsh_monotonicity.csv`, `kelmarsh_sample_info.json` (filter counts,
 sample, correlations).
+
+## Case study: Kelmarsh 1, 2019 (`kelmarsh_case_study.ipynb`)
+
+Same data, filtering and sample as the screening; `generator_speed` removed (correlation 1.0000 with
+`rotor_speed`), 8 variables. Turbine data from the Senvion MM92 product page (archived copy of 2020-04-02 in the
+Internet Archive): cut-in 3 m/s, nominal wind speed 12.5 m/s, nominal power 2,050 kW, rotor speed 7.5 – 15 rpm.
+No source gives a pitch angle at which pitching starts, so the physical-knot model has no interior knot for the
+pitch angle.
+
+Models (p = 2): PCA; qlPCA with 2 percentile knots; qlPCA with physical knots (wind 3 and 12.5 m/s, power
+2050 kW, rotor 7.5 and 15 rpm, temperatures at percentiles); both qlPCA models also with `monotone=True`.
+Out-of-sample: 5 contiguous time blocks, criterion of `screening.py`, gain over PCA paired by block.
+
+| model | VAF in sample | VAF out of sample (se) | paired gain over PCA (se) |
+|---|---|---|---|
+| PCA | 70.75 | 71.04 (3.51) | — |
+| qlPCA, percentile knots | 79.60 | 79.52 (1.90) | 8.47 (1.77) |
+| qlPCA, percentile knots, monotone | 77.32 | 76.74 (2.99) | 5.69 (0.70) |
+| qlPCA, physical knots | 74.30 | 74.01 (3.30) | 2.96 (0.83) |
+| qlPCA, physical knots, monotone | 73.89 | 73.61 (3.42) | 2.57 (0.73) |
+
+Other facts from the notebook:
+
+* March 2019 has no records after filtering: two "Oil filter gear choked" Warning events of 38 and 42 days
+  (2019-02-24 to 2019-04-04, 2019-04-09 to 2019-05-21) are removed by the filtering rule fixed before the
+  analysis; April and May keep 701 and 1153 of their records.
+* With percentile knots the descending segments of wind speed, power and rotor speed hold 660, 660 and 659 of the
+  2000 records, at low wind (median 4.35 m/s against 7.26 m/s elsewhere).
+* With physical knots the decreasing segments are wind speed 2 – 3 m/s (63 records) and rotor speed 2 – 7.5 rpm
+  (36 records).
+* Projection of October – December from a January – September fit: no projected record is outside the training
+  range, so no `ExtrapolationWarning` is issued; VAF in the projected period 75.88 (PCA), 81.13 (percentile
+  knots), 79.14 (physical knots).
+
+Results: `case_vaf.csv`, `case_vaf_blocks.csv`, `case_piecewise_loadings.csv`, `case_projection.csv`, figures
+`case_operating_regimes`, `case_v_shapes`, `case_v_shapes_power_curve`, `case_piecewise_loadings`,
+`case_biplot_regimes` (PDF and PNG).

@@ -115,13 +115,14 @@ def load_hill_of_towie():
 CANDIDATES = {"kelmarsh": load_kelmarsh, "hill_of_towie": load_hill_of_towie}
 
 
-def sample(df, info):
+def sample(df, info, keep_time=False):
     rng = np.random.default_rng(SEED)
     idx = np.sort(rng.choice(len(df), size=N_SAMPLE, replace=False))
     out = df.iloc[idx].sort_values("time")
     info.update({"sample_size": N_SAMPLE, "sample_seed": f"numpy.random.default_rng({SEED})",
                  "sample_first": str(out["time"].iloc[0]), "sample_last": str(out["time"].iloc[-1])})
-    return out.drop(columns="time").reset_index(drop=True)
+    out = out.reset_index(drop=True)
+    return out if keep_time else out.drop(columns="time")
 
 
 # ----------------------------------------------------------------------------- fits

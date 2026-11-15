@@ -1,0 +1,6 @@
+model,VAF in sample,VAF out of sample,se (out of sample),paired gain over PCA,se (paired gain)
+PCA,70.7512,71.0428,3.5094,,
+"qlPCA, percentile knots",79.6026,79.5178,1.9003,8.4750,1.7711
+"qlPCA, percentile knots, monotone",77.3197,76.7355,2.9913,5.6927,0.6953
+"qlPCA, physical knots",74.3038,74.0076,3.2981,2.9648,0.8272
+"qlPCA, physical knots, monotone",73.8871,73.6138,3.4203,2.5710,0.7283
