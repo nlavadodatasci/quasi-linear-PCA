@@ -1,0 +1,4 @@
+group,records,warning_active,in decreasing wind segment,in decreasing power segment,in decreasing rotor segment,mean score 1,mean score 2,median pitch,median rotor,median power
+"wind < B1, start-up/idle (pitch > 5 or rotor < 8.0)",26,13,26,26,26,0.3667,0.9090,16.4409,5.5998,17.1170
+"wind < B1, other",322,82,322,300,292,-0.2709,0.1266,0.5226,8.1551,77.0524
+wind >= B1,1652,270,0,30,39,0.0470,-0.0390,0.0000,12.2996,614.3844

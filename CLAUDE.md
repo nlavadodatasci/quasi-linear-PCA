@@ -170,6 +170,9 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   (generator_speed dropped); knots from control regions estimated on 2018 (medians in 0.5 m/s wind classes, 5 %
   thresholds: B1 4.35, B2 8.62, B3 9.55, B4 10.77 m/s); paired out-of-sample gain over PCA: control regions 10.97
   (se 2.15), percentile 8.53 (1.97), datasheet reference 3.94 (0.32); sensitivity without warning_active records.
+  Controls: percentiles with the same number of knots per variable (27 parameters vs 28): control regions
+  minus that model 1.98 (se 0.43), monotone 3.15 (0.72). Below B1, 26 start-up/idle records (pitch > 5 or rotor
+  < 8.0); without them the decreasing lowest segments of wind, power and rotor remain (gain 7.88, se 0.75).
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

@@ -1,7 +1,9 @@
-data,model,VAF in sample,VAF out of sample,se,paired gain,se (gain)
-all 2000 records,PCA,72.5739,71.9493,4.0124,,
-all 2000 records,percentile knots,80.6315,80.4770,2.1032,8.5277,1.9701
-all 2000 records,"percentile knots, monotone",78.8672,78.3424,3.1649,6.3931,1.0073
-all 2000 records,control regions (2018),83.4467,82.9144,2.1592,10.9651,2.1453
-all 2000 records,"control regions (2018), monotone",82.6426,81.9673,2.5506,10.0180,1.8003
-all 2000 records,datasheet (reference),76.1492,75.8875,4.1463,3.9382,0.3245
+data,model,parameters,VAF in sample,VAF out of sample,se,paired gain,se (gain)
+all 2000 records,PCA,8,72.5739,71.9493,4.0124,,
+all 2000 records,percentile knots,23,80.6315,80.4770,2.1032,8.5277,1.9701
+all 2000 records,"percentile knots, monotone",23,78.8672,78.3424,3.1649,6.3931,1.0073
+all 2000 records,control regions (2018),28,83.4467,82.9144,2.1592,10.9651,2.1453
+all 2000 records,"control regions (2018), monotone",28,82.6426,81.9673,2.5506,10.0180,1.8003
+all 2000 records,datasheet (reference),21,76.1492,75.8875,4.1463,3.9382,0.3245
+all 2000 records,"percentiles, same number of knots",27,81.0245,80.9332,2.0327,8.9839,2.0617
+all 2000 records,"percentiles, same number of knots, monotone",27,79.1986,78.8209,3.0764,6.8716,1.0986

@@ -1,0 +1,5 @@
+data,model,parameters,VAF in sample,VAF out of sample,se,paired gain,se (gain)
+without start-up/idle (1974 records),PCA,8,76.8735,76.2410,1.2852,,
+without start-up/idle (1974 records),percentile knots,23,82.5936,82.3372,1.3067,6.0962,0.4524
+without start-up/idle (1974 records),control regions (2018),28,84.6223,84.1224,1.4576,7.8814,0.7538
+without start-up/idle (1974 records),"percentiles, same number of knots",27,82.7872,82.5913,1.2831,6.3503,0.4479

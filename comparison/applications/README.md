@@ -178,6 +178,39 @@ VAF, p = 2 (5 contiguous time blocks; gain over PCA paired by block):
 Without the 365 `warning_active` records the paired gains are 7.46 (percentile), 5.56 (percentile, monotone),
 9.82 (control regions), 8.98 (control regions, monotone) and 3.43 (datasheet).
 
+**Number or location of the knots.** A further model places at the percentiles the same number of interior knots
+per variable as the control-region model uses (wind 4, power 4, rotor 2, pitch 2, temperatures 2; none merged).
+Parameters = sum over variables of (degree + interior knots).
+
+| model | parameters | VAF in sample | VAF out of sample (se) | paired gain over PCA (se) |
+|---|---|---|---|---|
+| PCA | 8 | 72.57 | 71.95 (4.01) | — |
+| percentile knots (2 per variable) | 23 | 80.63 | 80.48 (2.10) | 8.53 (1.97) |
+| percentiles, same number of knots | 27 | 81.02 | 80.93 (2.03) | 8.98 (2.06) |
+| control regions (2018) | 28 | 83.45 | 82.91 (2.16) | 10.97 (2.15) |
+| percentiles, same number of knots, monotone | 27 | 79.20 | 78.82 (3.08) | 6.87 (1.10) |
+| control regions (2018), monotone | 28 | 82.64 | 81.97 (2.55) | 10.02 (1.80) |
+
+The two "same number" models have 27 parameters, not 28, because one percentile knot of the pitch angle coincides
+with its minimum (0°) and is merged. Paired difference, control regions minus percentiles with the same number of
+knots: **1.98 (se 0.43)**; monotone versions: **3.15 (se 0.72)**.
+
+**The decreasing branch below B1.** Records of the 2019 sample with wind speed below B1 = 4.351 m/s, split into a
+start-up / idle state (pitch > 5° or rotor speed < 8.0 rpm) and the others; counts of records in the decreasing
+segments of the control-region model; mean scores on the two components:
+
+| group | records | decreasing wind / power / rotor segment | mean score 1 | mean score 2 | median pitch | median rotor | median power |
+|---|---|---|---|---|---|---|---|
+| wind < B1, start-up/idle | 26 | 26 / 26 / 26 | 0.37 | 0.91 | 16.44° | 5.60 rpm | 17.1 kW |
+| wind < B1, other | 322 | 322 / 300 / 292 | −0.27 | 0.13 | 0.52° | 8.16 rpm | 77.1 kW |
+| wind ≥ B1 | 1652 | 0 / 30 / 39 | 0.05 | −0.04 | 0.00° | 12.30 rpm | 614.4 kW |
+
+Control-region model refitted without the 26 start-up/idle records (1974 records): VAF 84.62 in sample, 84.12 out of
+sample, paired gain over PCA 7.88 (se 0.75); PCA on the same records 76.87 / 76.24. The lowest segments of wind
+speed (322 records), power (330) and rotor speed (331) still have a negative slope. Figure:
+`case_decreasing_branch` (pitch and rotor speed against wind speed, coloured by membership of the decreasing
+segments; start-up/idle records marked with x).
+
 Other facts from the notebook:
 
 * Distance from each percentile knot to the nearest control-region knot, in standard deviations of 2019: wind
@@ -196,5 +229,6 @@ Other facts from the notebook:
 
 Results: `case_vaf.csv`, `case_vaf_blocks.csv`, `case_vaf_sensitivity.csv`, `case_control_regions_2018_medians.csv`,
 `case_control_region_boundaries.csv`, `case_knot_distances.csv`, `case_segment_counts.csv`,
-`case_piecewise_loadings.csv`, `case_projection.csv`; figures `case_control_regions_2018`,
-`case_operating_regimes`, `case_v_shapes`, `case_piecewise_loadings`, `case_biplot_regimes` (PDF and PNG).
+`case_piecewise_loadings.csv`, `case_projection.csv`, `case_low_wind_groups.csv`, `case_vaf_without_idle.csv`;
+figures `case_control_regions_2018`, `case_operating_regimes`, `case_v_shapes`, `case_piecewise_loadings`,
+`case_biplot_regimes`, `case_decreasing_branch` (PDF and PNG).
