@@ -7,7 +7,7 @@ interface may still change between minor versions.
 Version 0.1.0 was never published: it existed only as the version number of the
 thesis-replication state of the repository. 0.2.0 is the first release.
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-11-15
 
 First public release: the Python package and the replication of the PhD thesis
 (Lavado, 2012) in one repository.
