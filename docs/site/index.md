@@ -64,8 +64,9 @@ The thesis chapter 4 data ship with the package: `X, variables, countries = qlpc
 > Continuous Data. *IAENG International Journal of Applied Mathematics*, 41(4), 367–375.
 > <https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf>
 
-**Software** — the Zenodo DOI of the repository is **pending** (it will be created with the first release).
-Until then cite the repository URL and version, as in
+**Software** — Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD
+thesis*, version 0.2.0. <https://github.com/nlavadodatasci/quasi-linear-PCA>. The Zenodo DOI is **pending** (it
+will be created with the first release); see
 [`CITATION.cff`](https://github.com/nlavadodatasci/quasi-linear-PCA/blob/main/CITATION.cff).
 
 Related work:
@@ -76,4 +77,11 @@ Related work:
   Components. *Proceedings of the World Congress on Engineering 2011*, vol. I, 360–364.
   <http://hdl.handle.net/10071/14371>
 
-Author: Nuno Lavado, Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra.
+## Authors
+
+* **Nuno Lavado** — Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra.
+  ORCID [0000-0001-8237-3086](https://orcid.org/0000-0001-8237-3086).
+* **Teresa Calapez** — ISCTE - Instituto Universitário de Lisboa.
+  ORCID [0000-0002-8584-2906](https://orcid.org/0000-0002-8584-2906).
+  She supervised the PhD thesis (Lavado, 2012) and is co-author of the paper that introduced qlPCA
+  (Lavado & Calapez, 2011).

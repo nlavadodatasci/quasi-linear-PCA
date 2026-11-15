@@ -198,6 +198,11 @@ Please cite the article that describes the method (see also [`CITATION.cff`](CIT
 > Continuous Data. *IAENG International Journal of Applied Mathematics*, 41(4), 367–375.
 > <https://www.iaeng.org/IJAM/issues_v41/issue_4/IJAM_41_4_14.pdf>
 
+To cite the software itself (the Zenodo DOI will be added with the first release):
+
+> Lavado, N. & Calapez, T. *qlpca: quasi-linear PCA in Python, with a replication of the PhD thesis*,
+> version 0.2.0. <https://github.com/nlavadodatasci/quasi-linear-PCA>
+
 Related work:
 
 * Lavado, N. (2012). *Extensões via splines da Análise em Componentes Principais*. PhD thesis, ISCTE –
@@ -225,16 +230,17 @@ A numerical comparison with `princals` (pipelines, same knots, defaults, local o
 
 * Gifi, A. (1990). *Nonlinear Multivariate Analysis*. Chichester: Wiley.
 
-## Acknowledgements
+## Authors
 
-The method was developed under the supervision of
-[Teresa Calapez](https://orcid.org/0000-0002-8584-2906) (ISCTE-IUL), who supervised the PhD thesis
-(Lavado, 2012) and is co-author of the paper that introduced qlPCA (Lavado & Calapez, 2011).
+* **Nuno Lavado** — Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra.
+  ORCID [0000-0001-8237-3086](https://orcid.org/0000-0001-8237-3086).
+* **Teresa Calapez** — ISCTE - Instituto Universitário de Lisboa.
+  ORCID [0000-0002-8584-2906](https://orcid.org/0000-0002-8584-2906).
+  She supervised the PhD thesis (Lavado, 2012) and is co-author of the paper that introduced qlPCA
+  (Lavado & Calapez, 2011).
 
 ## Licence
 
 Code, including the code cells of the notebooks: [MIT](LICENSE).
 Text and figures (notebook prose and outputs, `docs/`, this README): [CC BY 4.0](LICENSE-docs.md).
 The chapter 4 data are not covered by these licences; see [`data/README.md`](data/README.md).
-
-Author: Nuno Lavado, Coimbra Institute of Engineering (ISEC), Polytechnic University of Coimbra.
