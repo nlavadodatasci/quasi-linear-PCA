@@ -14,7 +14,8 @@ For each data set and number of interior knots r in {0, 1, 2, 3, 4, 6} (degree 1
   variance captured by the training principal axes;
 * reported: mean over the 20 splits and its standard error (sd / sqrt(20)).
 
-Data: make_cylinder(n=51, noise=0 and 0.25, random_state=0) (not rounded: no R involved here) and the
+Data: make_cylinder(n=51, noise=0, 0.10 and 0.25; n=500, noise=0.10; random_state=0; not rounded: no R
+involved here) and the
 gas turbine sample of manifest.json (2015, n = 400, 9 variables; downloaded at run time).
 Only qlpca is used; this file does not need pyGifi.
 """
@@ -52,7 +53,9 @@ def out_of_sample_vaf(X, n_knots, n_splits=5, n_repeats=4, random_state=0):
 def main():
     data = {
         "cylinder_0 (n=51)": make_cylinder(n=51, noise=0.0, random_state=0)[0],
+        "cylinder_10 (n=51)": make_cylinder(n=51, noise=0.10, random_state=0)[0],
         "cylinder_25 (n=51)": make_cylinder(n=51, noise=0.25, random_state=0)[0],
+        "cylinder_10 (n=500)": make_cylinder(n=500, noise=0.10, random_state=0)[0],
         "gas_turbine (n=400)": c.load_dataset("gas_turbine").to_numpy(),
     }
     rows = []
