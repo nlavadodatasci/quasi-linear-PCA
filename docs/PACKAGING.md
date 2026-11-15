@@ -89,7 +89,13 @@ first release archived on Zenodo; `load_st_gender()` must then work after `pip i
 | A. README + docstrings + notebooks (today) | already there | no searchable API reference |
 | B. small documentation site built from the docstrings and notebooks (GitHub Pages) | API reference, user guide, gallery; expected by users and reviewers | one more thing to keep building in CI |
 
-**Recommendation: A for 0.2, B for 0.3.**
+**Recommendation (changed 2026-11-15): B in 0.2.0.** Tool: **MkDocs** with the **Material** theme,
+**mkdocstrings** (Python handler, numpydoc docstrings) for the API reference and **mkdocs-jupyter** for the
+notebooks, shown already executed (not re-executed in the build). `mkdocs.yml` at the root, sources in
+`docs/site/`, extra material copied by `tools/mkdocs_hooks.py`; built with `mkdocs build --strict` in CI
+(`.github/workflows/docs.yml`) and deployed to GitHub Pages from `main`. Dependencies in the extra `docs`.
+(Material for MkDocs announces end of life on 2027-05-05; its successor, Zensical, reads the same
+`mkdocs.yml`.)
 
 ## P7. Citation
 
@@ -138,4 +144,4 @@ is kept rather than relaxed.
 
 - **0.1.0** — tag the current state as the thesis-replication release (GitHub release + Zenodo DOI).
 - **0.2.0** — library release: P2-B, P4-C, P5, `CITATION.cff`, README quick start, PyPI via Trusted Publishing.
-- **0.3.0** — documentation site; comparison notebook with `Gifi::princals`; per-variable `monotone`.
+- **0.3.0** — comparison notebook with `Gifi::princals`; per-variable `monotone` (the documentation site moved to 0.2.0, see P6).

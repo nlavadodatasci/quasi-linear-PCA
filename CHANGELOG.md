@@ -35,6 +35,13 @@ First public release: the Python package and the replication of the PhD thesis
 ### Replication
 - Notebooks 01-07 (07 is an introduction only); results compared with the thesis in the README.
 
+### Documentation
+- Documentation site (https://nlavadodatasci.github.io/quasi-linear-PCA/): MkDocs Material, API reference from the numpydoc docstrings
+  (mkdocstrings), user guide, choice of knots (D12), thesis notebooks (mkdocs-jupyter, not re-executed),
+  comparison with princals, Kelmarsh application, DESIGN.md and PACKAGING.md. Built with
+  `mkdocs build --strict` in CI and deployed to GitHub Pages from `main`; extra `docs` in pyproject.toml.
+- Docstrings of all public functions in numpydoc format (no change of signatures or defaults).
+
 ### Infrastructure
 - Version read from the package metadata (single source in `pyproject.toml`).
 - CI: tests on Python 3.10-3.13, notebook execution, wheel install with the README quick start.

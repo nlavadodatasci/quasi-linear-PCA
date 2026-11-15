@@ -22,9 +22,11 @@ dependencies = ["numpy>=1.22", "scipy>=1.8", "scikit-learn>=1.6"]
 [project.optional-dependencies]
 dev = ["pytest", "matplotlib", "pandas"]
 notebooks = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
+docs = ["mkdocs>=1.6,<2", "mkdocs-material>=9.5", "mkdocstrings[python]>=0.26", "mkdocs-jupyter>=0.25", "pandas"]
 
 [project.urls]
 Homepage = "https://github.com/nlavadodatasci/quasi-linear-PCA"
+Documentation = "https://nlavadodatasci.github.io/quasi-linear-PCA/"
 "PhD thesis" = "http://hdl.handle.net/10071/6202"
 
 [tool.setuptools.packages.find]

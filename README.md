@@ -1,6 +1,9 @@
 # qlPCA — quasi-linear principal components analysis
 
 [![CI](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml/badge.svg)](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/ci.yml)
+[![Docs](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/docs.yml/badge.svg)](https://github.com/nlavadodatasci/quasi-linear-PCA/actions/workflows/docs.yml)
+
+**Documentation: <https://nlavadodatasci.github.io/quasi-linear-PCA/>** (user guide, API reference, thesis replication, comparisons).
 
 This repository has two purposes:
 
