@@ -27,3 +27,6 @@ comparison/princals/results/inputs/
 
 # Paper draft (private for now)
 comparison/princals/paper/
+# Application screening: downloaded data
+comparison/applications/.cache/
+!comparison/applications/results/*.pdf
