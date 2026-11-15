@@ -42,6 +42,10 @@ First public release: the Python package and the replication of the PhD thesis
   `mkdocs build --strict` in CI and deployed to GitHub Pages from `main`; extra `docs` in pyproject.toml.
 - Docstrings of all public functions in numpydoc format (no change of signatures or defaults).
 
+### Authors and metadata
+- Software authors: Nuno Lavado and Teresa Calapez (`CITATION.cff`, `pyproject.toml`, README "Authors");
+  `.zenodo.json` with the creators, licence, keywords and related identifiers for the Zenodo archive.
+
 ### Infrastructure
 - Version read from the package metadata (single source in `pyproject.toml`).
 - CI: tests on Python 3.10-3.13, notebook execution, wheel install with the README quick start.

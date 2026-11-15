@@ -132,11 +132,19 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   TestPyPI, published release -> PyPI, environments "testpypi"/"pypi"). Not yet published:
   no tag, no release; the PyPI/TestPyPI trusted publishers and GitHub environments must be
   configured by the author.
-- Before the 0.2.0 GitHub release / Zenodo DOI: (1) `data/README.md` still says "check with
-  Oliveira & Carvalho before redistributing" - update it once the permission is confirmed;
-  (2) notebook 07 ships as an introduction only unless the author decides otherwise;
-  (3) Zenodo linked to the GitHub account; (4) README installation still uses the GitHub URL
-  (switch to `pip install qlpca` after the PyPI upload); (5) CHANGELOG date for 0.2.0.
+- Phase 3 done (2026-11-15): documentation site published at
+  https://nlavadodatasci.github.io/quasi-linear-PCA/ (MkDocs Material, mkdocstrings, mkdocs-jupyter;
+  `mkdocs.yml` at the root, sources in docs/site/, tools/mkdocs_hooks.py; .github/workflows/docs.yml).
+- Phase 4, release preparation for 0.2.0 (2026-11-15; no tag, no release): software authors Nuno Lavado and
+  Teresa Calapez (ORCID 0000-0002-8584-2906, ISCTE - Instituto Universitário de Lisboa; she accepted
+  co-authorship) in CITATION.cff, pyproject.toml, README/site "Authors"; `.zenodo.json` (creators, MIT,
+  keywords, related identifiers: IJAM URL, thesis and WCE handles; no invented DOIs); the redistribution
+  warning removed from data/README.md; sdist and wheel checked (twine --strict; no PDFs, comparison/,
+  notes/, paper/, .tex; data CSV included). Notebook 07 ships as an introduction only.
+- Still to do by the author: trusted publishers on TestPyPI and PyPI (project qlpca, workflow publish.yml,
+  environments testpypi / pypi); GitHub environments "testpypi" and "pypi"; link the repository in Zenodo
+  (GitHub integration) before the release; date of 0.2.0 in CHANGELOG.md; tag v0.2.0 and GitHub release;
+  afterwards switch the README installation to `pip install qlpca` and add the Zenodo DOI.
 
 - Comparison with princals (2026-11-14): `comparison/princals/` (README, manifest.json with explicit
   knots and input md5, compare.py, generate_r_ground_truth.R, install_pygifi.py, notebook
