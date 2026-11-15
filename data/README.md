@@ -9,9 +9,10 @@ Transcribed from Appendix A.1 (p. 112) of the PhD thesis and checked against the
 page. It reproduces the summary statistics of thesis Table 4.1 and the PCA
 eigenvalues of Table 4.3.
 
-- Origin: Eurostat and *She Figures 2006* (reference years 2003-2004), as selected
-  by Oliveira & Carvalho (2009). The thesis states the data were kindly provided
-  by those authors. **Check with them before redistributing under an open licence.**
+- Origin: compiled by Oliveira & Carvalho (2009) from Eurostat and *She Figures 2006*
+  (reference years 2003-2004), as used in chapter 4 of the thesis, which states that the
+  data were kindly provided by those authors. The data are not covered by the MIT licence
+  of the code.
 - 12 of the 27 EU countries were dropped for missing values.
 - Six values carry a third decimal (e.g. 2.301, 21.101, 4.201). These were added
   in the thesis on purpose so that every value within a variable is unique, a
