@@ -83,7 +83,7 @@ files as the artefact `r-ground-truth`. Download them into `results/r_ground_tru
 filled in, and the R checks in `tests/` run. Each JSON records the R and Gifi versions and the md5 of the input
 it was computed on; `compare.py` refuses a JSON whose input does not match the manifest.
 
-Until then every comparison with R is marked **pending**; all numbers come from qlpca and pyGifi.
+The JSON files in `results/r_ground_truth/` were computed with R 4.6.2 and Gifi 1.0-0 on 2026-11-14. With the same knots (degree 1, no monotonicity) qlpca agrees with Gifi (R) within the manifest tolerances in all 12 cases, and with monotone degree-1 fits in all 3. With the defaults, pyGifi and R return different solutions on the cylinder data sets (and slightly on `neumann`); see the notebook, section d).
 
 ## Settings
 

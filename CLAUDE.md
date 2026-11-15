@@ -143,13 +143,15 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   qlpca_vs_princals.ipynb, results/, tests/). Gifi/pyGifi are GPL-3: only called/imported there, never
   copied into src/qlpca. pyGifi pinned to 7aa81ed; its fits cached in results/pygifi/. Gas turbine
   (UCI, CC BY 4.0) downloaded at run time to .cache/ (year 2015, n = 400, seed 2015, 9 variables).
-  Workflows: `.github/workflows/r-ground-truth.yml` (manual; R JSON not yet generated) and an optional
+  Workflows: `.github/workflows/r-ground-truth.yml` (manual; run once, JSON committed) and an optional
   CI job (`continue-on-error`). Local notes `comparison/princals/notes/` are git-ignored: never add them.
   Findings: same knots, degree 1, no monotonicity -> qlpca = pyGifi within tolerance in 12/12 cases;
   monotone degree 1 equal, degree 2 differ (different feasible sets; princals' Dykstra result not exactly
   isotone); pyGifi's default start (SVD) differs from R's (set.seed(123)); cylinder inputs rounded to
   10 significant digits because make_cylinder differs in the last bit across platforms.
-  Pending: everything against Gifi (R) until the workflow is run and the JSON files are committed.
+  R ground truth (R 4.6.2, Gifi 1.0-0) committed 2026-11-15 in results/r_ground_truth/: qlpca = Gifi (R)
+  within tolerance in 12/12 same-knot cases and 3/3 monotone degree 1; with defaults pyGifi and R differ on
+  the cylinder data (and slightly on neumann). R JSON loadings are (ndim, m); compare.py transposes them.
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.
