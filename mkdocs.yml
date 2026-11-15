@@ -1,0 +1,113 @@
+site_name: qlpca — quasi-linear PCA
+site_description: Python package for quasi-linear principal components analysis, and the replication of the PhD thesis in which the method was proposed.
+site_author: Nuno Lavado
+site_url: https://nlavadodatasci.github.io/quasi-linear-PCA/
+repo_url: https://github.com/nlavadodatasci/quasi-linear-PCA
+repo_name: nlavadodatasci/quasi-linear-PCA
+edit_uri: ""
+copyright: Code MIT; text and figures CC BY 4.0 — Nuno Lavado
+
+# The site sources live in docs/site/ (docs/ also holds DESIGN.md, PACKAGING.md and SPEC.md, which are
+# included in the site through tools/mkdocs_hooks.py, not published as loose files). mkdocs.yml stays at the
+# root so that the build reaches the notebooks and the comparison results.
+docs_dir: docs/site
+site_dir: build/site
+
+hooks:
+  - tools/mkdocs_hooks.py
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: ["build/docs_fragments"]
+      check_paths: true
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            members_order: source
+            merge_init_into_class: true
+            separate_signature: true
+            show_signature_annotations: false
+            filters: ["!^_"]
+  - mkdocs-jupyter:
+      execute: false
+      include_source: true
+      ignore_h1_titles: true
+
+validation:
+  omitted_files: warn
+  absolute_links: info
+  unrecognized_links: warn
+  anchors: warn
+
+not_in_nav: |
+  /generated/**
+
+nav:
+  - Home: index.md
+  - User guide: user-guide.md
+  - Choosing the knots: knot-selection.md
+  - API reference:
+      - QLPCA and warnings: api/qlpca.md
+      - Splines: api/splines.md
+      - Diagnostics: api/diagnostics.md
+      - Plots: api/plots.md
+      - Datasets: api/datasets.md
+  - Thesis replication:
+      - Overview: replication/index.md
+      - 01 Spline transformations: generated/notebooks/01_splines.ipynb
+      - 02 PCA as loss minimisation: generated/notebooks/02_pca_loss_function.ipynb
+      - 03 From CATPCA to qlPCA: generated/notebooks/03_from_catpca_to_qlpca.ipynb
+      - 04 The qlPCA algorithm: generated/notebooks/04_qlpca_algorithm.ipynb
+      - 05 The cylinder problem: generated/notebooks/05_cylinder_problem.ipynb
+      - 06 Science & technology, gender: generated/notebooks/06_science_technology_gender.ipynb
+      - 07 Eurostat (introduction): generated/notebooks/07_wce2011_eurostat.ipynb
+  - Comparison with princals: princals.md
+  - Application (Kelmarsh): kelmarsh.md
+  - Design decisions:
+      - DESIGN.md: design/design.md
+      - PACKAGING.md: design/packaging.md
+  - Changelog: changelog.md
+  - Licences: licences.md

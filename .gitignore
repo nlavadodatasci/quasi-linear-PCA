@@ -30,3 +30,7 @@ comparison/princals/paper/
 # Application screening: downloaded data
 comparison/applications/.cache/
 !comparison/applications/results/*.pdf
+
+# Documentation site (MkDocs): generated material
+docs/site/generated/
+.cache/

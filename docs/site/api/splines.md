@@ -1,0 +1,3 @@
+# Splines
+
+::: qlpca.splines
