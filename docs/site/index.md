@@ -21,8 +21,8 @@ best and reporting the loss of each, which guards against local optima; it proje
 be placed at percentiles or at values that mean something in the application; and `QLPCA` works as a
 scikit-learn transformer. On wind turbine SCADA data, knots placed at the turbine's control regions add 11 to 13
 points of out-of-sample variance over linear PCA, in all six turbines of a wind farm — see the
-[Kelmarsh application](kelmarsh.md). How qlPCA relates to `princals` (Gifi) is in
-[Comparison with princals](princals.md).
+[Kelmarsh application](https://github.com/nlavadodatasci/quasi-linear-PCA/tree/main/comparison/applications). How qlPCA relates to `princals` (Gifi) is in the
+[comparison with princals](https://github.com/nlavadodatasci/quasi-linear-PCA/blob/main/comparison/princals/qlpca_vs_princals.ipynb).
 
 ## Installation
 
