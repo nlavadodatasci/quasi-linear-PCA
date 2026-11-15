@@ -51,6 +51,7 @@ def _download(url, path):
 
 KELMARSH = {
     "record": "16807551",
+    "files": {2018: "Kelmarsh_SCADA_2018_3084.zip", 2019: "Kelmarsh_SCADA_2019_3085.zip"},
     "file": "Kelmarsh_SCADA_2019_3085.zip",
     "turbine": "Kelmarsh_1",
     "variables": {           # short name -> SCADA column prefix (the units contain a degree sign)
@@ -65,13 +66,26 @@ KELMARSH = {
         "ambient_temp": "Nacelle ambient temperature (",
     },
 }
+REMOVED_STATUS = ["Stop", "Communication"]   # Warning events are flagged (warning_active), not removed
 
 
-def load_kelmarsh():
-    """Filtered ten-minute records of Kelmarsh 1, 2019 (README: filtering), and the counts per step."""
+def _overlap(t0, events):
+    """Records [t0, t0 + 10 min) overlapping any event interval [start, end]."""
+    t1 = t0 + np.timedelta64(10, "m")
+    out = np.zeros(len(t0), bool)
+    for a, b in zip(pd.to_datetime(events["Timestamp start"]).to_numpy(),
+                    pd.to_datetime(events["Timestamp end"]).to_numpy()):
+        out |= (t0 < b) & (t1 > a)
+    return out
+
+
+def load_kelmarsh(year=2019):
+    """Filtered ten-minute records of Kelmarsh 1 for one year (README: filtering), with a column
+    warning_active (record overlaps a Warning event; not a model variable), and the counts per step."""
     spec = KELMARSH
-    url = f"https://zenodo.org/api/records/{spec['record']}/files/{spec['file']}/content"
-    z = zipfile.ZipFile(_download(url, CACHE / spec["file"]))
+    fname = spec["files"][year]
+    url = f"https://zenodo.org/api/records/{spec['record']}/files/{fname}/content"
+    z = zipfile.ZipFile(_download(url, CACHE / fname))
     names = z.namelist()
     data_name = next(n for n in names if n.startswith(f"Turbine_Data_{spec['turbine']}_"))
     status_name = next(n for n in names if n.startswith(f"Status_{spec['turbine']}_"))
@@ -81,31 +95,52 @@ def load_kelmarsh():
     t = pd.to_datetime(d["Date and time"])
     X = d[list(cols.values())].astype(float)
     X.columns = list(cols)
-    info = {"source": f"zenodo record {spec['record']}, {spec['file']}, {data_name}", "records": int(len(X))}
-
-    # 1. stoppages, alarms, communication loss: drop records overlapping such an event
-    s = pd.read_csv(z.open(status_name), skiprows=9)
-    s = s[s["Status"].isin(["Stop", "Warning", "Communication"])]
-    start = pd.to_datetime(s["Timestamp start"]).to_numpy()
-    end = pd.to_datetime(s["Timestamp end"]).to_numpy()
     t0 = t.to_numpy()
-    t1 = t0 + np.timedelta64(10, "m")
-    bad = np.zeros(len(t0), bool)
-    for a, b in zip(start, end):                 # overlap of [t0, t1) with [a, b]
-        bad |= (t0 < b) & (t1 > a)
-    info["events_used"] = {k: int(v) for k, v in s["Status"].value_counts().items()}
+    info = {"source": f"zenodo record {spec['record']}, {fname}, {data_name}", "year": year, "records": int(len(X))}
+
+    status = pd.read_csv(z.open(status_name), skiprows=9)
+    miss = X.isna().any(axis=1).to_numpy()
+    allmiss = X.isna().all(axis=1).to_numpy()
+    removed_events = status[status["Status"].isin(REMOVED_STATUS)]
+    warnings_ = status[status["Status"] == "Warning"]
+    comm = _overlap(t0, status[status["Status"] == "Communication"])
+    info["missing_values"] = {
+        "records_with_missing": int(miss.sum()), "share": round(float(miss.mean()), 4),
+        "all_variables_missing": int(allmiss.sum()), "some_variables_missing": int((miss & ~allmiss).sum()),
+        "some_missing_first": str(t[miss & ~allmiss].min()), "some_missing_last": str(t[miss & ~allmiss].max()),
+        "missing_during_communication_events": int((miss & comm).sum()),
+        "reason_for_removal": ("technical failure (data not recorded or not transmitted), independent of the values of "
+                               "the variables; qlpca requires complete data"),
+    }
+
+    # 1. stoppages and communication loss: drop records overlapping such an event
+    bad = _overlap(t0, removed_events)
+    info["events_removed"] = {k: int(v) for k, v in removed_events["Status"].value_counts().items()}
     info["removed_status_events"] = int(bad.sum())
+    info["missing_removed_in_step_1"] = int((bad & miss).sum())
     keep = ~bad
     # 2. not producing
-    not_producing = keep & ~(X["power"] > 0)
+    not_producing = keep & ~(X["power"] > 0).to_numpy()
     info["removed_power_le_0"] = int(not_producing.sum())
-    keep &= X["power"] > 0
+    info["missing_removed_in_step_2"] = int((not_producing & miss).sum())   # power itself missing
+    keep &= (X["power"] > 0).to_numpy()
     # 3. missing values
-    missing = keep & X.isna().any(axis=1)
+    missing = keep & miss
     info["removed_missing"] = int(missing.sum())
-    keep &= ~X.isna().any(axis=1)
+    keep &= ~miss
     info["records_after_filtering"] = int(keep.sum())
-    return X[keep].assign(time=t[keep].to_numpy()), info
+
+    # Warning events: flagged, not removed
+    warn = _overlap(t0, warnings_)
+    info["warning_events"] = int(len(warnings_))
+    info["records_after_filtering_with_warning_active"] = int((warn & keep).sum())
+    longw = warnings_.assign(start=pd.to_datetime(warnings_["Timestamp start"]),
+                             end=pd.to_datetime(warnings_["Timestamp end"]))
+    longw = longw.assign(days=(longw.end - longw.start).dt.total_seconds() / 86400).sort_values("days", ascending=False)
+    info["longest_warning_events"] = [
+        {"start": str(r.start), "end": str(r.end), "days": round(r.days, 1), "code": int(r.Code), "message": r.Message}
+        for r in longw.head(3).itertuples()]
+    return X[keep].assign(time=t[keep].to_numpy(), warning_active=warn[keep]), info
 
 
 def load_hill_of_towie():
@@ -116,13 +151,16 @@ CANDIDATES = {"kelmarsh": load_kelmarsh, "hill_of_towie": load_hill_of_towie}
 
 
 def sample(df, info, keep_time=False):
+    """2000 records (fixed seed), sorted in time. keep_time=True keeps the columns time and warning_active,
+    which are not model variables."""
     rng = np.random.default_rng(SEED)
     idx = np.sort(rng.choice(len(df), size=N_SAMPLE, replace=False))
     out = df.iloc[idx].sort_values("time")
     info.update({"sample_size": N_SAMPLE, "sample_seed": f"numpy.random.default_rng({SEED})",
                  "sample_first": str(out["time"].iloc[0]), "sample_last": str(out["time"].iloc[-1])})
+    info["sample_with_warning_active"] = int(out["warning_active"].sum())
     out = out.reset_index(drop=True)
-    return out if keep_time else out.drop(columns="time")
+    return out if keep_time else out.drop(columns=["time", "warning_active"])
 
 
 # ----------------------------------------------------------------------------- fits

@@ -1,6 +1,7 @@
-model,VAF in sample,VAF out of sample,se (out of sample),paired gain over PCA,se (paired gain)
-PCA,70.7512,71.0428,3.5094,,
-"qlPCA, percentile knots",79.6026,79.5178,1.9003,8.4750,1.7711
-"qlPCA, percentile knots, monotone",77.3197,76.7355,2.9913,5.6927,0.6953
-"qlPCA, physical knots",74.3038,74.0076,3.2981,2.9648,0.8272
-"qlPCA, physical knots, monotone",73.8871,73.6138,3.4203,2.5710,0.7283
+data,model,VAF in sample,VAF out of sample,se,paired gain,se (gain)
+all 2000 records,PCA,72.5739,71.9493,4.0124,,
+all 2000 records,percentile knots,80.6315,80.4770,2.1032,8.5277,1.9701
+all 2000 records,"percentile knots, monotone",78.8672,78.3424,3.1649,6.3931,1.0073
+all 2000 records,control regions (2018),83.4467,82.9144,2.1592,10.9651,2.1453
+all 2000 records,"control regions (2018), monotone",82.6426,81.9673,2.5506,10.0180,1.8003
+all 2000 records,datasheet (reference),76.1492,75.8875,4.1463,3.9382,0.3245

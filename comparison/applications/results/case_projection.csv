@@ -1,4 +1,4 @@
-model,VAF training (in sample),"VAF projected, clipped","VAF projected, linear extrapolation",score range training,score range projected
-PCA,70.4405,75.8770,75.8770,"[-5.43, 4.63]","[-3.79, 3.13]"
-"qlPCA, percentile knots",78.9512,81.1250,81.1250,"[-2.43, 3.92]","[-2.02, 3.38]"
-"qlPCA, physical knots",73.6164,79.1376,79.1376,"[-2.62, 5.41]","[-2.05, 4.01]"
+model,VAF training,"VAF projected, clipped","VAF projected, linear extrapolation",scores training,scores projected
+PCA,72.3051,75.0264,74.7114,"[-5.92, 3.92]","[-3.51, 2.91]"
+percentile knots,80.1094,81.9298,81.8777,"[-2.68, 4.14]","[-2.26, 3.10]"
+control regions (2018),83.4349,83.4862,83.4569,"[-3.37, 3.72]","[-2.37, 3.39]"

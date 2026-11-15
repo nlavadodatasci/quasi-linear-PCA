@@ -163,10 +163,13 @@ MATLAB behaviour and is what the replication notebooks compare with the thesis.
   before the run, screening.py, results/). Kelmarsh (Zenodo 16807551, CC-BY-4.0), turbine 1, 2019, 9 SCADA
   variables, n = 2000 (seed 2026), 5 contiguous time blocks: p = 2 out-of-sample VAF PCA 72.69, qlPCA 2 knots
   80.50 (gain 7.81 >= 5): passed; Hill of Towie not screened. Data downloaded to .cache/ (git-ignored).
-  Case study `comparison/applications/kelmarsh_case_study.ipynb` (2026-11-15): 8 variables (generator_speed
-  dropped), Senvion MM92 data from the archived product page; paired out-of-sample gain over PCA: percentile
-  knots 8.47 (se 1.77), physical knots 2.96 (0.83). March 2019 empty after filtering (two long "Oil filter gear
-  choked" warnings). No pitch value for a physical knot in the sources (none estimated).
+  Filter revised (2026-11-15): only Stop and Communication events removed; Warning events kept and flagged
+  (`warning_active`, not a model variable) - the earlier rule removed ~80 days of production (two "Oil filter gear
+  choked" warnings, code 1860) and hid 2428 records with missing values (now documented in sample_info.json).
+  Screening re-run: gain 8.43, passed. Case study `comparison/applications/kelmarsh_case_study.ipynb`: 8 variables
+  (generator_speed dropped); knots from control regions estimated on 2018 (medians in 0.5 m/s wind classes, 5 %
+  thresholds: B1 4.35, B2 8.62, B3 9.55, B4 10.77 m/s); paired out-of-sample gain over PCA: control regions 10.97
+  (se 2.15), percentile 8.53 (1.97), datasheet reference 3.94 (0.32); sensitivity without warning_active records.
 
 ## Conventions
 - Percentiles must follow MATLAB `prctile`: `np.percentile(x, q, method="hazen")`.

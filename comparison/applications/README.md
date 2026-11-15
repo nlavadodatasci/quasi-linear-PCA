@@ -82,12 +82,29 @@ speed, rotor-speed limits, heating with load):
 * pressures, accelerations, cable windings, metal particle counts: incomplete or condition-monitoring signals
   outside the operating-state description.
 
-**Filtering** (in this order):
+**Filtering** (in this order; revised on 2026-11-15, see below):
 
 1. remove every ten-minute record whose interval `[t, t + 10 min)` overlaps an event of the status file with
-   `Status` equal to **Stop** (stoppages), **Warning** (alarms) or **Communication** (data unavailable);
+   `Status` equal to **Stop** (stoppages) or **Communication** (data unavailable);
 2. remove records with `Power (kW) <= 0` (turbine not producing: idling or stopped);
 3. remove records with a missing value in any of the nine variables.
+
+Records overlapping a **Warning** event are kept and flagged in a column `warning_active`, which is not a model
+variable; it is used in the figures and in a sensitivity analysis with and without those records.
+
+**Missing values.** 2 428 records of 2019 (4.6 %) have missing values: 84 with all nine variables missing and
+2 344 with some missing, from 2019-05-05 03:20 to 2019-05-21 09:50, during a "Data communication unavailable"
+event. Step 1 removes 2 422 of them and step 2 the remaining 6 (their power is missing); step 3 finds none left.
+They are removed because the gaps come from a technical failure (data not recorded or not transmitted),
+independent of the values of the variables, and `qlpca` requires complete data. The counts are in
+`results/kelmarsh_sample_info.json` (`missing_values`).
+
+**Why Warning events are no longer removed.** The first run (rule above with Warning included in step 1) reported
+"0 removed for missing values", which hid the missing values above (all were already removed by step 1), and
+removed about 80 days in which the turbine produced power: two "Oil filter gear choked" warnings (code 1860) of
+38.8 and 42.0 days (2019-02-24 to 2019-04-04 and 2019-04-09 to 2019-05-21), which emptied March and most of April
+and May. A warning does not stop the turbine; removing its whole duration removes normal operation. The screening
+was run again with the revised rule; the approval criterion did not change.
 
 ## Candidate 2: Hill of Towie wind farm (only if candidate 1 fails)
 
@@ -96,72 +113,88 @@ checked on 2026-11-15: 2.1.0, record [22662930](https://zenodo.org/records/22662
 doi:[10.5281/zenodo.22662930](https://doi.org/10.5281/zenodo.22662930); concept DOI
 [10.5281/zenodo.14870021](https://doi.org/10.5281/zenodo.14870021).
 
-## Results (run on 2026-11-15)
+## Results (revised filter, run on 2026-11-15)
 
 ### Kelmarsh 1, 2019
 
-Filtering: 52 560 records; 12 387 removed for overlapping a Stop (118 events), Warning (87) or Communication
-(10) event; 3 283 removed for `Power <= 0`; 0 for missing values; 36 890 remain. Sample of 2000 records from
-2019-01-01 08:20 to 2019-12-31 19:30.
+Filtering: 52 560 records; 2 917 removed for overlapping a Stop (118 events) or Communication (10) event; 4 076
+removed for `Power <= 0` or missing power; 0 for other missing values; 45 567 remain, of which 8 677 overlap a
+Warning event (kept). Sample of 2000 records from 2019-01-01 10:20 to 2019-12-31 23:00 (365 `warning_active`).
 
 VAF (%), in sample and out of sample (5 contiguous time blocks; mean and standard error over the blocks):
 
 | model | p | in sample | out of sample | se | out-of-sample gain over PCA |
 |---|---|---|---|---|---|
-| PCA | 2 | 72.32 | 72.69 | 2.77 | — |
-| qlPCA, 1 knot | 2 | 76.42 | 75.73 | 3.30 | 3.04 |
-| qlPCA, 2 knots | 2 | 80.63 | 80.50 | 1.69 | 7.81 |
-| PCA | 3 | 86.26 | 86.07 | 0.77 | — |
-| qlPCA, 1 knot | 3 | 86.83 | 86.42 | 1.07 | 0.35 |
-| qlPCA, 2 knots | 3 | 89.55 | 89.18 | 0.91 | 3.12 |
+| PCA | 2 | 73.62 | 72.89 | 3.29 | — |
+| qlPCA, 1 knot | 2 | 78.01 | 76.88 | 3.30 | 3.99 |
+| qlPCA, 2 knots | 2 | 81.48 | 81.31 | 1.81 | 8.43 |
+| PCA | 3 | 86.67 | 86.16 | 0.80 | — |
+| qlPCA, 1 knot | 3 | 87.61 | 85.65 | 1.86 | −0.51 |
+| qlPCA, 2 knots | 3 | 89.88 | 89.25 | 1.12 | 3.09 |
 
-**Criterion (p = 2, gain >= 5 points with 1 or 2 knots): passed** (2 knots: 7.81). Hill of Towie was therefore
-not screened.
+**Criterion (p = 2, gain >= 5 points with 1 or 2 knots): passed** (2 knots: 8.43). With the first filter it was
+also passed (7.81). Hill of Towie was not screened.
 
 Non-monotone transformations (p = 2, whole sample): 4 of 9 with 1 knot (wind speed, power, rotor speed,
-generator speed), 5 of 9 with 2 knots (the same and generator temperature).
-
-Notes on the data, from the numbers: rotor speed and generator speed have correlation 1.0000 (to four
-decimals) in the sample. The pitch angle equals its minimum (0°) in 58 % of the records, so its two percentile
-knots coincide and are merged into one.
+generator speed), 5 of 9 with 2 knots (the same and generator temperature). Rotor speed and generator speed have
+correlation 1.0000 to four decimals.
 
 Files: `screening_summary.csv`, `kelmarsh_vaf.csv` (every block), `kelmarsh_transformations.pdf/.png`,
-`kelmarsh_piecewise_loadings.csv`, `kelmarsh_monotonicity.csv`, `kelmarsh_sample_info.json` (filter counts,
-sample, correlations).
+`kelmarsh_piecewise_loadings.csv`, `kelmarsh_monotonicity.csv`, `kelmarsh_sample_info.json` (filter counts, missing
+values, Warning events, sample, correlations).
 
 ## Case study: Kelmarsh 1, 2019 (`kelmarsh_case_study.ipynb`)
 
 Same data, filtering and sample as the screening; `generator_speed` removed (correlation 1.0000 with
-`rotor_speed`), 8 variables. Turbine data from the Senvion MM92 product page (archived copy of 2020-04-02 in the
-Internet Archive): cut-in 3 m/s, nominal wind speed 12.5 m/s, nominal power 2,050 kW, rotor speed 7.5 – 15 rpm.
-No source gives a pitch angle at which pitching starts, so the physical-knot model has no interior knot for the
-pitch angle.
+`rotor_speed`); 8 variables.
 
-Models (p = 2): PCA; qlPCA with 2 percentile knots; qlPCA with physical knots (wind 3 and 12.5 m/s, power
-2050 kW, rotor 7.5 and 15 rpm, temperatures at percentiles); both qlPCA models also with `monotone=True`.
-Out-of-sample: 5 contiguous time blocks, criterion of `screening.py`, gain over PCA paired by block.
+**Knots from the observed control regions, estimated on 2018** (another year, same filter, 45 331 records). Wind
+speed in classes of 0.5 m/s (classes with at least 30 records); medians of rotor speed, pitch angle and power per
+class; each boundary is the wind speed at which a median crosses a threshold at 5 % of its range (linear
+interpolation between class centres):
+
+| boundary | threshold | wind (m/s) | power median (kW) | rotor median (rpm) | pitch median (deg) |
+|---|---|---|---|---|---|
+| B1 end of minimum rotor speed | rotor 8.492 rpm | 4.351 | 149.1 | 8.492 | 0.079 |
+| B2 rated rotor speed reached | rotor 14.813 rpm | 8.625 | 1293.2 | 14.813 | 0.050 |
+| B3 start of pitching | pitch 0.713° (above the low-wind pitch region) | 9.553 | 1645.9 | 15.100 | 0.713 |
+| B4 rated power reached | power 1949.0 kW | 10.771 | 1949.0 | 15.155 | 3.332 |
+
+Knots: wind speed at B1–B4; power at the power medians of B1–B4; rotor speed at B1 and B2 (where its regime
+changes); pitch at B3 and at the pitch median of B4; temperatures at the percentiles. The Senvion datasheet knots
+(wind 3 and 12.5 m/s, power 2050 kW, rotor 7.5 and 15 rpm; no pitch value given) are kept as a reference.
+
+VAF, p = 2 (5 contiguous time blocks; gain over PCA paired by block):
 
 | model | VAF in sample | VAF out of sample (se) | paired gain over PCA (se) |
 |---|---|---|---|
-| PCA | 70.75 | 71.04 (3.51) | — |
-| qlPCA, percentile knots | 79.60 | 79.52 (1.90) | 8.47 (1.77) |
-| qlPCA, percentile knots, monotone | 77.32 | 76.74 (2.99) | 5.69 (0.70) |
-| qlPCA, physical knots | 74.30 | 74.01 (3.30) | 2.96 (0.83) |
-| qlPCA, physical knots, monotone | 73.89 | 73.61 (3.42) | 2.57 (0.73) |
+| PCA | 72.57 | 71.95 (4.01) | — |
+| percentile knots | 80.63 | 80.48 (2.10) | 8.53 (1.97) |
+| percentile knots, monotone | 78.87 | 78.34 (3.16) | 6.39 (1.01) |
+| control regions (2018) | 83.45 | 82.91 (2.16) | 10.97 (2.15) |
+| control regions (2018), monotone | 82.64 | 81.97 (2.55) | 10.02 (1.80) |
+| datasheet (reference) | 76.15 | 75.89 (4.15) | 3.94 (0.32) |
+
+Without the 365 `warning_active` records the paired gains are 7.46 (percentile), 5.56 (percentile, monotone),
+9.82 (control regions), 8.98 (control regions, monotone) and 3.43 (datasheet).
 
 Other facts from the notebook:
 
-* March 2019 has no records after filtering: two "Oil filter gear choked" Warning events of 38 and 42 days
-  (2019-02-24 to 2019-04-04, 2019-04-09 to 2019-05-21) are removed by the filtering rule fixed before the
-  analysis; April and May keep 701 and 1153 of their records.
-* With percentile knots the descending segments of wind speed, power and rotor speed hold 660, 660 and 659 of the
-  2000 records, at low wind (median 4.35 m/s against 7.26 m/s elsewhere).
-* With physical knots the decreasing segments are wind speed 2 – 3 m/s (63 records) and rotor speed 2 – 7.5 rpm
-  (36 records).
-* Projection of October – December from a January – September fit: no projected record is outside the training
-  range, so no `ExtrapolationWarning` is issued; VAF in the projected period 75.88 (PCA), 81.13 (percentile
-  knots), 79.14 (physical knots).
+* Distance from each percentile knot to the nearest control-region knot, in standard deviations of 2019: wind
+  0.38 and 0.58; power 0.23 and 0.86; rotor 0.49 and 0.61; pitch 0.21 (the percentile model has one pitch knot:
+  the 33rd percentile is 0°, the minimum).
+* Segments with fewer than 50 records: none for percentile and control-region knots; 3 for the datasheet knots
+  (wind above 12.5 m/s, 49; power above 2050 kW, 25; rotor below 7.5 rpm, 22).
+* Decreasing segments of wind speed, power and rotor speed: with percentile knots the lowest segment of each
+  (660 records, about 150 of them `warning_active`); with control-region knots the segment below B1 (348, 356,
+  357 records, 95–97 `warning_active`). In the control-region model the pitch segment above 3.33° and the
+  generator-temperature segment below 60.6 °C also decrease.
+* Projection of October – December from a January – September fit: 1 of 551 projected records is outside the
+  training range (rotor speed and pitch); the `ExtrapolationWarning` is issued. VAF in the projected period,
+  clipped / linearly extrapolated: PCA 75.03 / 74.71; percentile knots 81.93 / 81.88; control regions 83.49 /
+  83.46.
 
-Results: `case_vaf.csv`, `case_vaf_blocks.csv`, `case_piecewise_loadings.csv`, `case_projection.csv`, figures
-`case_operating_regimes`, `case_v_shapes`, `case_v_shapes_power_curve`, `case_piecewise_loadings`,
-`case_biplot_regimes` (PDF and PNG).
+Results: `case_vaf.csv`, `case_vaf_blocks.csv`, `case_vaf_sensitivity.csv`, `case_control_regions_2018_medians.csv`,
+`case_control_region_boundaries.csv`, `case_knot_distances.csv`, `case_segment_counts.csv`,
+`case_piecewise_loadings.csv`, `case_projection.csv`; figures `case_control_regions_2018`,
+`case_operating_regimes`, `case_v_shapes`, `case_piecewise_loadings`, `case_biplot_regimes` (PDF and PNG).

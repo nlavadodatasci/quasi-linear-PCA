@@ -1,0 +1,5 @@
+boundary,threshold,wind (m/s),power median (kW),rotor median (rpm),pitch median (deg)
+B1: end of minimum rotor speed,rotor 8.492 rpm,4.3514,149.0855,8.4915,0.0785
+B2: rated rotor speed reached,rotor 14.813 rpm,8.6249,1293.2493,14.8135,0.0499
+B3: start of pitching,pitch 0.713 deg,9.5533,1645.9157,15.1004,0.7130
+B4: rated power reached,power 1949.0 kW,10.7713,1949.0434,15.1550,3.3324

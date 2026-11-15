@@ -1,0 +1,8 @@
+variable,percentile knot,nearest control-region knot,distance,distance (sd)
+wind_speed,5.2775,4.3514,0.9261,0.3822
+wind_speed,7.2239,8.6249,1.4010,0.5782
+power,285.1196,149.0855,136.0341,0.2285
+power,781.4106,1293.2493,511.8387,0.8597
+rotor_speed,9.7803,8.4915,1.2888,0.4931
+rotor_speed,13.2313,14.8135,1.5822,0.6054
+pitch_angle,0.1100,0.7130,0.6030,0.2115
