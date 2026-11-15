@@ -19,6 +19,17 @@ variable with a **low-order spline** — usually piecewise linear, with one to t
 chosen jointly with the components by alternating least squares. Continuous variables enter directly,
 with no discretisation step.
 
+**What it gives the user.** qlPCA reads as ordinary PCA with flexibility added knot by knot: with no interior
+knots it *is* PCA, and each knot lets a variable's contribution change from one range of its values to the next.
+That change is reported directly as **piecewise loadings** — the loading of each variable on each component,
+segment by segment, on the original scale. The package starts from the PCA solution and adds random starts, keeping the
+best and reporting the loss of each, which guards against local optima; it projects new observations and reconstructs data (degree 1); knots can
+be placed at percentiles or at values that mean something in the application; and `QLPCA` works as a
+scikit-learn transformer. On wind turbine SCADA data, knots placed at the turbine's control regions add 11 to 13
+points of out-of-sample variance over linear PCA, in all six turbines of a wind farm — see the
+[Kelmarsh application](comparison/applications/README.md). How qlPCA relates to `princals` (Gifi) is in
+[`comparison/princals/`](comparison/princals/).
+
 The listings printed in the thesis are transcribed in
 [`matlab_original/`](matlab_original/), and a literal numpy port of them is in
 [`prototype/`](prototype/); the package in [`src/qlpca`](src/qlpca) is tested against both.
