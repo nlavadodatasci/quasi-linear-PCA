@@ -235,7 +235,9 @@ def load_r_ground_truth(name):
         js = json.load(fh)
     out = {"meta": js["meta"]}
     for run, r in js["runs"].items():
-        out[run] = _result(r["evals"], r["objectscores"], r["transform"], r["loadings"], r["ntel"], r["f"],
+        # generate_r_ground_truth.R writes the loadings as (ndim, m); qlpca and pyGifi use (m, ndim)
+        loadings = np.asarray(r["loadings"], float).T
+        out[run] = _result(r["evals"], r["objectscores"], r["transform"], loadings, r["ntel"], r["f"],
                            r.get("params", []))
     return out
 

@@ -53,6 +53,19 @@ def test_princals_does_not_discretise_numeric_columns():
         assert len(np.unique(p["transform"][:, j].round(12))) == len(np.unique(df.iloc[:, j]))
 
 
+@pytest.mark.parametrize("name", list(MAN["datasets"]))
+def test_r_ground_truth_shapes(name):
+    rgt = c.load_r_ground_truth(name)
+    if rgt is None:
+        pytest.skip(f"no R ground truth for {name} yet")
+    n, m = MAN["inputs"][name]["n"], len(MAN["inputs"][name]["columns"])
+    for run in c.runs_for(MAN, name):
+        r = rgt[run]
+        assert r["loadings"].shape == (m, MAN["ndim"]), run
+        assert r["objectscores"].shape == (n, MAN["ndim"]) and r["transform"].shape == (n, m)
+        assert r["evals"].shape == (m,)
+
+
 @pytest.mark.parametrize("name", LOCAL)
 def test_r_ground_truth_if_available(name):
     rgt = c.load_r_ground_truth(name)

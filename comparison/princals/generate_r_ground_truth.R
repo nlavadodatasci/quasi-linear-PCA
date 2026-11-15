@@ -11,7 +11,7 @@
 #
 # JSON layout (per data set):
 #   meta: R and Gifi versions, input md5, date, (neumann) agreement with data(neumann)
-#   runs: {run: {evals, objectscores (n x ndim), transform (n x m), loadings (m x ndim),
+#   runs: {run: {evals, objectscores (n x ndim), transform (n x m), loadings (ndim x m; compare.py transposes),
 #                ntel, f, params (rank of the centred B-spline basis per variable)}}
 
 suppressPackageStartupMessages({
@@ -24,7 +24,7 @@ ndim <- manifest$ndim
 outdir <- file.path("results", "r_ground_truth")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
-if (as.character(packageVersion("Gifi")) != manifest$packages$Gifi)
+if (packageVersion("Gifi") != package_version(manifest$packages$Gifi))   # "1.0-0" == "1.0.0"
   warning("Gifi version ", packageVersion("Gifi"), " differs from the manifest (", manifest$packages$Gifi, ")")
 
 runs_for <- function(name) {
