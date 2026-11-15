@@ -232,3 +232,40 @@ Results: `case_vaf.csv`, `case_vaf_blocks.csv`, `case_vaf_sensitivity.csv`, `cas
 `case_piecewise_loadings.csv`, `case_projection.csv`, `case_low_wind_groups.csv`, `case_vaf_without_idle.csv`;
 figures `case_control_regions_2018`, `case_operating_regimes`, `case_v_shapes`, `case_piecewise_loadings`,
 `case_biplot_regimes`, `case_decreasing_branch` (PDF and PNG).
+
+
+## All turbines: protocol
+
+Fixed on 2026-11-15, **before** any computation on turbines 2 to 6. Implemented in `kelmarsh_all_turbines.py`
+(notebook `kelmarsh_all_turbines.ipynb`); results in `results/` with the prefix `all_`.
+
+1. **Turbines and years.** Kelmarsh 1 to 6; analysis year 2019; boundary year 2018. The pipeline of the Kelmarsh 1
+   case study is applied without changes: the same 8 variables (wind speed, power, rotor speed, pitch angle,
+   nacelle, generator, gearbox and ambient temperatures); the same filter (remove records overlapping Stop or
+   Communication events, `Power <= 0` and missing values; keep records overlapping Warning events, flagged
+   `warning_active`); a sample of 2000 records with `numpy.random.default_rng(2026)`; 5 contiguous time blocks;
+   the same out-of-sample VAF criterion (test rows clipped to the training range); gains paired by block.
+2. **Boundaries.** B1 to B4 are estimated on 2018 for each turbine with the same method (medians by wind classes
+   of 0.5 m/s with at least 30 records; thresholds at 5 % of the range of each median; B3 searched above the wind
+   of the minimum pitch median). They are reported in a table per turbine.
+3. **Exclusion rule.** A turbine is excluded only if, in 2019 or in 2018, it has fewer than 20 000 records after
+   filtering, or if any of the boundaries cannot be estimated. Exclusions and their reason are reported.
+4. **Models per turbine** (p = 2): PCA; percentiles with 2 knots per variable; percentiles with the same number of
+   interior knots per variable as the control-region model; control regions (2018); the last two also with
+   `monotone=True`.
+5. **Main results.**
+   (a) per turbine, the paired difference "control regions minus percentiles with the same number of knots" and its
+   standard error over the 5 blocks, in the unrestricted and the monotone versions;
+   (b) the number of turbines in which that difference is positive;
+   (c) the mean of the differences over the turbines and its standard error between turbines
+   (sd / sqrt(number of turbines)).
+   Also reported: the gain of each model over PCA; the correlation between rotor speed and generator speed per
+   turbine (to confirm that dropping generator speed applies to all); the number of start-up / idle records below B1
+   (pitch > 5° or rotor speed < 8.0 rpm) and the gain of the control-region model without them; whether the segments
+   below B1 of wind speed, power and rotor speed are decreasing in each turbine.
+6. **Sensitivity.** The results of (a) without the `warning_active` records.
+7. **Check.** Kelmarsh 1 must reproduce the case study (paired gain of the control-region model over PCA 10.97;
+   difference control regions minus percentiles with the same number of knots 1.98). If it does not, the run stops.
+
+Figures: the difference (a) per turbine with error bars, unrestricted and monotone; the 2018 operating curves of the
+six turbines with B1 to B4. Numbers are reported without interpretation.
